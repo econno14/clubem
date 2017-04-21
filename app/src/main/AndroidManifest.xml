@@ -29,10 +29,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".SettingsActivity" />
+        <activity android:name=".ProfileActivity" />
+        <activity android:name=".Login" />
+
         <activity android:name=".SignupActivity" />
         <activity android:name=".SignUpActivity" />
         <activity android:name=".CreateEventActivity" />
-        <activity android:name=".CreateClubActivity"></activity>
+        <activity android:name=".CreateClubActivity" />
+        <activity android:name=".PrivateClubActivity" />
+        <activity android:name=".PublicClubActivity"></activity>
     </application>
 
 </manifest>

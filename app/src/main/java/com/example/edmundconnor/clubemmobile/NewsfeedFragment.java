@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.test.suitebuilder.TestMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,8 +60,8 @@ public class NewsfeedFragment extends Fragment {
         publicEventNames[0] = "empty";
 
         getUpcomingPublicEvents();
-        getSuggestedEvents();
         getTrendingEvents();
+        getSuggestedEvents();
         getSuggestedClubs();
         getTrendingClubs();
     }
@@ -105,10 +106,9 @@ public class NewsfeedFragment extends Fragment {
                             );
 
                             layoutinflater = getActivity().getLayoutInflater();
-                            //TextView head = (TextView) getActivity().findViewById(R.id.item_header);
-                            //head.setText("@strings/upcomingPE");
-                            ViewGroup header = (ViewGroup)layoutinflater.inflate(R.layout.item_header,lv,false);
-                            lv.addHeaderView(header);
+                            TextView head = (TextView) View.inflate(getActivity(), R.layout.item_header, null);
+                            head.setText("Upcoming Public Events");
+                            lv.addHeaderView(head);
 
                             lv.setAdapter(lvAdapter);
 
@@ -162,10 +162,9 @@ public class NewsfeedFragment extends Fragment {
                             );
 
                             layoutinflater = getActivity().getLayoutInflater();
-                            //TextView head = (TextView) getActivity().findViewById(R.id.item_header);
-                            //head.setText("@strings/upcomingPE");
-                            ViewGroup header = (ViewGroup)layoutinflater.inflate(R.layout.item_header,lv,false);
-                            lv.addHeaderView(header);
+                            TextView head = (TextView) View.inflate(getActivity(), R.layout.item_header, null);
+                            head.setText("Trending Events");
+                            lv.addHeaderView(head);
 
                             lv.setAdapter(lvAdapter);
 
@@ -219,10 +218,9 @@ public class NewsfeedFragment extends Fragment {
                             );
 
                             layoutinflater = getActivity().getLayoutInflater();
-                            //TextView head = (TextView) getActivity().findViewById(R.id.item_header);
-                            //head.setText("@strings/upcomingPE");
-                            ViewGroup header = (ViewGroup)layoutinflater.inflate(R.layout.item_header,lv,false);
-                            lv.addHeaderView(header);
+                            TextView head = (TextView) View.inflate(getActivity(), R.layout.item_header, null);
+                            head.setText("Suggested Events");
+                            lv.addHeaderView(head);
 
                             lv.setAdapter(lvAdapter);
 
@@ -276,10 +274,9 @@ public class NewsfeedFragment extends Fragment {
                             );
 
                             layoutinflater = getActivity().getLayoutInflater();
-                            //TextView head = (TextView) getActivity().findViewById(R.id.item_header);
-                            //head.setText("@strings/upcomingPE");
-                            ViewGroup header = (ViewGroup)layoutinflater.inflate(R.layout.item_header,lv,false);
-                            lv.addHeaderView(header);
+                            TextView head = (TextView) View.inflate(getActivity(), R.layout.item_header, null);
+                            head.setText("Trending Clubs");
+                            lv.addHeaderView(head);
 
                             lv.setAdapter(lvAdapter);
 
@@ -333,10 +330,9 @@ public class NewsfeedFragment extends Fragment {
                             );
 
                             layoutinflater = getActivity().getLayoutInflater();
-                            //TextView head = (TextView) getActivity().findViewById(R.id.item_header);
-                            //head.setText("@strings/upcomingPE");
-                            ViewGroup header = (ViewGroup)layoutinflater.inflate(R.layout.item_header,lv,false);
-                            lv.addHeaderView(header);
+                            TextView head = (TextView) View.inflate(getActivity(), R.layout.item_header, null);
+                            head.setText("Suggested Clubs");
+                            lv.addHeaderView(head);
 
                             lv.setAdapter(lvAdapter);
 
