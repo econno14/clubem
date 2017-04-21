@@ -31,6 +31,7 @@ public class LoginActivity extends Activity  {
     EditText editEmail,editPw;
     String url = "https://clubs-jhu.herokuapp.com/clubs/api/login";
     TextView txt;
+    public static final String ID = "com.example.edmundconnor.clubemmobile.ID";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +71,7 @@ public class LoginActivity extends Activity  {
                                     System.out.println(userId);
                                     txt.setVisibility(View.INVISIBLE);
                                     Intent intent = new Intent(getApplicationContext(), NavigationActivity.class);
-                                    intent.putExtra("userID", id);
+                                    intent.putExtra(ID, id);
                                     startActivity(intent);
                                 } catch (JSONException e) {
                                     e.printStackTrace();
