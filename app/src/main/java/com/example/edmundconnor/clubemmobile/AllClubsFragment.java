@@ -1,11 +1,13 @@
 package com.example.edmundconnor.clubemmobile;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -47,7 +49,26 @@ public class AllClubsFragment extends Fragment {
 
         getAllClubs();
 
+    }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_allclub, container, false);
+
+        ListView lv = (ListView) view.findViewById(R.id.list_allClubs);
+
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                Intent intent = new Intent(getActivity(), PublicClubActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        return view;
     }
 
     public void getAllClubs() {
@@ -99,26 +120,6 @@ public class AllClubsFragment extends Fragment {
         );
         Volley.newRequestQueue(getActivity()).add(getRequest);
         //Log.i("Club Name here", jsonArray[0].toString());
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_allclub, container, false);
-
-        ListView lv = (ListView) view.findViewById(R.id.list_allClubs);
-
-        clubNames = new String[1];
-        clubNames[0] = "empty";
-        ArrayAdapter<String> lvAdapter = new ArrayAdapter(
-                getActivity(),
-                android.R.layout.simple_list_item_1,
-                clubNames
-        );
-        lv.setAdapter(lvAdapter);
-        //getAllClubs();
-
-        return view;
     }
 
 }

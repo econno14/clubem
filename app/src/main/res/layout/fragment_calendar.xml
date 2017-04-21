@@ -5,8 +5,4 @@
     tools:context="com.example.edmundconnor.clubemmobile.CalendarFragment">
 
 
-    <CalendarView
-        android:layout_width="match_parent"
-        android:layout_height="365dp"
-        android:id="@+id/calendarView" />
 </FrameLayout>

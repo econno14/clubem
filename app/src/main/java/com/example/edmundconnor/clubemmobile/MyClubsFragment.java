@@ -1,16 +1,20 @@
 package com.example.edmundconnor.clubemmobile;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -30,6 +34,7 @@ public class MyClubsFragment extends Fragment {
     String url = "https://clubs-jhu.herokuapp.com/clubs/api/5/userClubs";
     private String[] clubNames;
     private String[] clubDescriptions;
+    private int[] clubId;
     private JSONObject[] jsonArray;
     private ListView lv;
     private LayoutInflater layoutinflater;
@@ -59,7 +64,15 @@ public class MyClubsFragment extends Fragment {
 
         ListView lv = (ListView) view.findViewById(R.id.list_myClubs);
 
-
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                Intent intent = new Intent(getActivity(), PrivateClubActivity.class);
+                startActivity(intent);
+            }
+        });
 
         return view;
     }
@@ -84,6 +97,7 @@ public class MyClubsFragment extends Fragment {
                                 String description = club.getString("description");
                                 Integer id = club.getInt("clubId");
                                 clubNames[i] = name;
+                                clubId[i] = id;
 
                                 clubDescriptions[i] = description;
 
