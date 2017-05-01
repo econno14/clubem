@@ -31,8 +31,12 @@ public class AllClubsFragment extends Fragment {
     String url = "https://clubs-jhu.herokuapp.com/clubs/api/allClubs";
     private String[] clubNames;
     private String[] clubDescriptions;
+    private int [] clubIds;
     private JSONObject[] jsonArray;
     private ListView lv;
+    public static final String clubID = "com.example.edmundconnor.clubemmobile.clubID";
+    public static final String clubNAME = "com.example.edmundconnor.clubemmobile.clubNAME";
+    public static final String clubDESC = "com.example.edmundconnor.clubemmobile.clubDESC";
 
     public AllClubsFragment() {
         // Required empty public constructor
@@ -64,6 +68,11 @@ public class AllClubsFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
                 Intent intent = new Intent(getActivity(), PublicClubActivity.class);
+                Integer cid = clubIds[position];
+                String club_id = cid.toString();
+                intent.putExtra(clubID, club_id);
+                intent.putExtra(clubNAME, clubNames[position]);
+                intent.putExtra(clubDESC, clubDescriptions[position]);
                 startActivity(intent);
             }
         });
@@ -81,6 +90,7 @@ public class AllClubsFragment extends Fragment {
                             JSONArray clubs = response.getJSONArray("clubs");
                             clubNames = new String[clubs.length()];
                             clubDescriptions = new String[clubs.length()];
+                            clubIds = new int[clubs.length()];
                             //jsonArray = new JSONObject[clubs.length()];
                             for (int i = 0; i < clubs.length(); i++) {
                                 JSONObject club = clubs.getJSONObject(i);
@@ -91,7 +101,7 @@ public class AllClubsFragment extends Fragment {
                                 String description = club.getString("description");
                                 Integer id = club.getInt("clubId");
                                 clubNames[i] = name;
-
+                                clubIds[i] = id;
                                 clubDescriptions[i] = description;
 
 

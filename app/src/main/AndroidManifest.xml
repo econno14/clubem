@@ -16,8 +16,7 @@
         <activity
             android:name=".NavigationActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity android:name=".SettingsActivity" />
         <activity android:name=".ProfileActivity" />
         <activity
@@ -29,17 +28,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".SettingsActivity" />
-        <activity android:name=".ProfileActivity" />
-        <activity android:name=".Login" />
-
-        <activity android:name=".SignupActivity" />
         <activity android:name=".SignUpActivity" />
         <activity android:name=".CreateEventActivity" />
         <activity android:name=".CreateClubActivity" />
         <activity android:name=".PrivateClubActivity" />
-        <activity android:name=".PublicClubActivity"></activity>
+        <activity android:name=".PublicClubActivity" />
+        <activity android:name=".EventActivity"></activity>
     </application>
 
 </manifest>
