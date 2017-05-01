@@ -1,6 +1,7 @@
 package com.example.edmundconnor.clubemmobile;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -30,7 +31,9 @@ public class PublicClubActivity extends AppCompatActivity {
     String[] clubEventDate;
     String[] membersName;
     String[] clubAdmin;
+    private static String club_desc, club_name;
     private ListView lv;
+    private ListView lav;
     private LayoutInflater layoutinflater;
     private Context context;
 
@@ -38,6 +41,20 @@ public class PublicClubActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_public_club);
+        Intent intent = getIntent();
+
+        String cid = intent.getStringExtra(AllClubsFragment.clubID);
+        String uid = intent.getStringExtra(LoginActivity.ID);
+        club_desc = intent.getStringExtra(AllClubsFragment.clubDESC);
+        club_name = intent.getStringExtra(AllClubsFragment.clubNAME);
+        System.out.print("Club ID: " + cid);
+
+        setTitle(club_name);
+        TextView description = (TextView) findViewById(R.id.public_club_description);
+        description.setText(club_desc);
+
+        getClubEvents();
+        getClubMembers();
     }
 
     public void getClubEvents() {
@@ -124,7 +141,6 @@ public class PublicClubActivity extends AppCompatActivity {
                             TextView head = (TextView) View.inflate(PublicClubActivity.this, R.layout.item_header, null);
                             head.setText("Club Members");
                             lv.addHeaderView(head);
-
                             lv.setAdapter(lvAdapter);
 
                         } catch (JSONException e) {

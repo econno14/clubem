@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -31,13 +32,18 @@ import org.json.JSONObject;
 
 public class MyClubsFragment extends Fragment {
 
-    String url = "https://clubs-jhu.herokuapp.com/clubs/api/5/userClubs";
+    String url = "https://clubs-jhu.herokuapp.com/clubs/api/";
+    String urlend = "/userClubs";
     private String[] clubNames;
     private String[] clubDescriptions;
-    private int[] clubId;
+    private Integer[] clubId;
     private JSONObject[] jsonArray;
     private ListView lv;
     private LayoutInflater layoutinflater;
+    public static final String clubID = "com.example.edmundconnor.clubemmobile.clubID";
+    public static final String clubNAME = "com.example.edmundconnor.clubemmobile.clubNAME";
+    public static final String clubDESC = "com.example.edmundconnor.clubemmobile.clubDESC";
+    public static final String clubROLE = "com.example.edmundconnor.clubemmobile.clubROLE";
 
     public MyClubsFragment() {
         // Required empty public constructor
@@ -53,7 +59,12 @@ public class MyClubsFragment extends Fragment {
         clubNames = new String[1];
         clubNames[0] = "empty";
 
-        getMyClubs();
+        Intent intent = getActivity().getIntent();
+        String id = intent.getStringExtra(LoginActivity.ID);
+        String getUrl = url + id + urlend;
+        //System.out.println(getUrl);
+
+        getMyClubs(getUrl);
     }
 
 
@@ -69,7 +80,14 @@ public class MyClubsFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
+                //System.out.println("CHECK " + position + " " + clubId[position]);
                 Intent intent = new Intent(getActivity(), PrivateClubActivity.class);
+                System.out.print("CHECK " + position + " " +clubId[position]);
+                Integer cid = clubId[position];
+                String club_id = cid.toString();
+                intent.putExtra(clubID, club_id);
+                intent.putExtra(clubNAME, clubNames[position]);
+                intent.putExtra(clubDESC, clubDescriptions[position]);
                 startActivity(intent);
             }
         });
@@ -77,22 +95,25 @@ public class MyClubsFragment extends Fragment {
         return view;
     }
 
-    public void getMyClubs() {
-        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+    public void getMyClubs(String getUrl) {
+
+        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, getUrl, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        System.out.println(clubNames == null);
+                        //System.out.println(clubNames == null);
+
                         try {
                             JSONArray clubs = response.getJSONArray("clubs");
+                            //System.out.println(clubs);
                             clubNames = new String[clubs.length()];
                             clubDescriptions = new String[clubs.length()];
+                            clubId = new Integer[clubs.length()];
                             //jsonArray = new JSONObject[clubs.length()];
                             for (int i = 0; i < clubs.length(); i++) {
                                 JSONObject club = clubs.getJSONObject(i);
                                 //jsonArray[i] = club;
-                                Log.i("Club", club.toString());
-
+                                //Log.i("Club", club.toString());
                                 String name = club.getString("name");
                                 String description = club.getString("description");
                                 Integer id = club.getInt("clubId");
@@ -100,7 +121,6 @@ public class MyClubsFragment extends Fragment {
                                 clubId[i] = id;
 
                                 clubDescriptions[i] = description;
-
 
                             }
                             lv = (ListView) getView().findViewById(R.id.list_myClubs);
