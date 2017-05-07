@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -21,10 +22,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import static com.example.edmundconnor.clubemmobile.LoginActivity.ID;
+
 public class PublicClubActivity extends AppCompatActivity {
 
-    String url1 = "https://clubs-jhu.herokuapp.com/clubs/api/1/events";
-    String url2 = "https://clubs-jhu.herokuapp.com/clubs/api/1/members";
+    String url = "https://clubs-jhu.herokuapp.com/clubs/api/";
+    String url1, url2, url3;
     String[] clubEventName;
     String[] clubEventLocation;
     String[] clubEventDescription;
@@ -36,6 +39,7 @@ public class PublicClubActivity extends AppCompatActivity {
     private ListView lav;
     private LayoutInflater layoutinflater;
     private Context context;
+    private Button apply;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,10 +48,22 @@ public class PublicClubActivity extends AppCompatActivity {
         Intent intent = getIntent();
 
         String cid = intent.getStringExtra(AllClubsFragment.clubID);
-        String uid = intent.getStringExtra(LoginActivity.ID);
+        String uid = intent.getStringExtra(ID);
         club_desc = intent.getStringExtra(AllClubsFragment.clubDESC);
         club_name = intent.getStringExtra(AllClubsFragment.clubNAME);
         System.out.print("Club ID: " + cid);
+
+        url1 = url + cid + "/events";
+        url2 = url + cid + "/members";
+        url3 = url + cid + "/apply";
+
+        apply = (Button) findViewById(R.id.apply_button);
+        apply.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               applyToClub();
+            }
+        });
 
         setTitle(club_name);
         TextView description = (TextView) findViewById(R.id.public_club_description);
@@ -55,6 +71,33 @@ public class PublicClubActivity extends AppCompatActivity {
 
         getClubEvents();
         getClubMembers();
+    }
+
+    public void applyToClub() {
+        JSONObject jsonBody = new JSONObject();
+        try {
+            jsonBody.put("userID", ID);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, url3, jsonBody,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Intent intent = new Intent(getApplicationContext(), NavigationActivity.class);
+                        startActivity(intent);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                        Log.d("Error", "Error: " + error.getMessage());
+                    }
+                }
+        ) {
+        };
+        Volley.newRequestQueue(getApplicationContext()).add(postRequest);
     }
 
     public void getClubEvents() {

@@ -51,38 +51,6 @@ public class CreateEventActivity extends AppCompatActivity {
 
     public void createEvent() {
 
-        StringRequest putRequest = new StringRequest(Request.Method.PUT, putUrl,
-                new Response.Listener<String>()
-                {
-                    @Override
-                    public void onResponse(String response) {
-                        // response
-                        Log.d("Response", response);
-                    }
-                },
-                new Response.ErrorListener()
-                {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // error
-                        Log.d("Error.Response", error.toString());
-                    }
-                }
-        ) {
 
-            @Override
-            protected Map<String, String> getParams()
-            {
-                Map<String, String>  params = new HashMap<String, String>();
-
-                params.put("name", "Alif");
-                params.put("domain", "http://itsalif.info");
-
-                return params;
-            }
-
-        };
-
-        Volley.newRequestQueue(this).add(putRequest);
     }
 }

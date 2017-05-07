@@ -10,4 +10,56 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.edmundconnor.clubemmobile.CreateClubActivity">
 
+
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:hint="Club Names"
+        android:id="@+id/new_club_name"/>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:layout_marginTop="30dp"
+        android:hint="Club Description"
+        android:id="@+id/new_club_description"
+        android:layout_below="@id/new_club_name"/>
+
+
+
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/cancel_new_club"
+        android:background="@color/colorPrimaryDark"
+        android:text="Cancel"
+        android:textColor="@color/white"
+        android:padding="10dp"
+        android:textSize="20dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginBottom="128dp"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/new_club_description"
+        android:layout_toEndOf="@+id/new_club_description"
+        android:layout_marginStart="50dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/create_new_club"
+        android:background="@color/colorAccent"
+        android:text="Create"
+        android:textColor="@color/white"
+        android:padding="10dp"
+        android:textSize="20dp"
+        android:layout_alignBaseline="@+id/cancel_new_club"
+        android:layout_alignBottom="@+id/cancel_new_club"
+        android:layout_toLeftOf="@+id/cancel_new_club"
+        android:layout_toStartOf="@+id/cancel_new_club" />
+
+
 </RelativeLayout>

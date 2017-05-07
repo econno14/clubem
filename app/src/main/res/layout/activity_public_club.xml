@@ -56,4 +56,15 @@
         android:paddingTop="10dp">
     </ListView>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/apply_button"
+        android:layout_below="@id/list_publicClubEvents"
+        android:background="@color/colorPrimary"
+        android:layout_centerInParent="true"
+        android:layout_margin="20dp"
+        android:text="Apply"
+        android:textColor="@color/white"/>
+
 </RelativeLayout>
