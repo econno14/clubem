@@ -33,6 +33,9 @@
         <activity android:name=".CreateEventActivity" />
         <activity android:name=".CreateClubActivity" />
         <activity android:name=".ShowProfile"></activity>
+        <activity android:name=".PrivateClubActivity" />
+        <activity android:name=".PublicClubActivity" />
+        <activity android:name=".EventActivity"></activity>
     </application>
 
 </manifest>
