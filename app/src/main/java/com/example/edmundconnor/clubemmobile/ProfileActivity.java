@@ -54,7 +54,7 @@ public class ProfileActivity extends AppCompatActivity {
         pw_ = (EditText)findViewById(R.id.passwordEdit);
         pwRe_ = (EditText) findViewById(R.id.password1Edit);
 
-        edit = (Button)findViewById(R.id.button2);
+        edit = (Button)findViewById(R.id.edit_profile_button);
         txt = (TextView) findViewById(R.id.textview1);
 
         Intent intent = getIntent();
@@ -119,7 +119,7 @@ public class ProfileActivity extends AppCompatActivity {
         });
 
 
-        Button addImgButton = (Button) findViewById(R.id.add_img_butotn);
+        Button addImgButton = (Button) findViewById(R.id.add_img_button);
         addImgButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

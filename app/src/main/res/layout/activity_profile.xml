@@ -10,136 +10,146 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.edmundconnor.clubemmobile.ProfileActivity">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textPersonName"
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:text="Justin Chung"
+                android:ems="10"
+                android:id="@+id/name"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
 
-        android:text="Justin Chung"
-        android:ems="10"
-        android:id="@+id/name"
-        android:layout_alignBaseline="@+id/editText7"
-        android:layout_alignBottom="@+id/editText7"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:text="2017"
+                android:ems="10"
+                android:id="@+id/nameEdit"
+                android:hint="Name"
+                android:background="@android:drawable/editbox_dropdown_light_frame"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="47dp" />
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:text="2017"
-        android:ems="10"
-        android:id="@+id/nameEdit"
-        android:hint="Name"
-        android:background="@android:drawable/editbox_dropdown_light_frame"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="47dp" />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textEmailAddress"
-        android:ems="10"
-        android:id="@+id/emailEdit"
-        android:hint="Email"
-        android:background="@android:drawable/editbox_dropdown_light_frame"
-        android:layout_alignTop="@+id/nameEdit"
-        android:layout_alignLeft="@+id/nameEdit"
-        android:layout_alignStart="@+id/nameEdit"
-        android:layout_marginTop="69dp" />
-
-
-    <Button
-        android:text="Edit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/button2"
-        android:layout_marginBottom="37dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="number"
-        android:ems="10"
-        android:id="@+id/gradYearEdit"
-        android:hint="Grad Year"
-        android:background="@android:drawable/editbox_dropdown_light_frame"
-        android:layout_below="@+id/emailEdit"
-        android:layout_alignLeft="@+id/emailEdit"
-        android:layout_alignStart="@+id/emailEdit"
-        android:layout_marginTop="48dp" />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/editText12"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
-        android:id="@+id/button2" />
-        android:inputType="textPassword"
-        android:ems="10"
-        android:id="@+id/passwordEdit"
-        android:hint="Password"
-        android:background="@android:drawable/editbox_dropdown_light_frame"
-        android:layout_below="@+id/gradYearEdit"
-        android:layout_alignLeft="@+id/gradYearEdit"
-        android:layout_alignStart="@+id/gradYearEdit"
-        android:layout_marginTop="32dp" />
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="textEmailAddress"
+                android:ems="10"
+                android:id="@+id/emailEdit"
+                android:hint="Email"
+                android:background="@android:drawable/editbox_dropdown_light_frame"
+                android:layout_alignTop="@+id/nameEdit"
+                android:layout_alignLeft="@+id/nameEdit"
+                android:layout_alignStart="@+id/nameEdit"
+                android:layout_marginTop="69dp" />
 
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="100dp"
-        android:src="@drawable/profile"
-        android:id="@+id/profile_image"
-        android:layout_below="@id/button2"
-        android:layout_marginTop="20dp"/>
+            <Button
+                android:text="Edit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/edit_profile_button"
+                android:layout_marginBottom="37dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        android:id="@+id/add_img_butotn"
-        android:layout_toRightOf="@id/profile_image"
-        android:layout_alignBottom="@id/profile_image"
-        android:text="Add Img"/>
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:ems="10"
+                android:id="@+id/gradYearEdit"
+                android:hint="Grad Year"
+                android:background="@android:drawable/editbox_dropdown_light_frame"
+                android:layout_below="@+id/emailEdit"
+                android:layout_alignLeft="@+id/emailEdit"
+                android:layout_alignStart="@+id/emailEdit"
+                android:layout_marginTop="48dp" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/save_image_button"
-        android:layout_below="@id/add_img_butotn"
-        android:layout_toRightOf="@id/profile_image"
-        android:background="@color/colorAccent"
-        android:layout_margin="10dp"
-        android:text="Save Img"
-        android:visibility="invisible"/>
-        android:inputType="textPassword"
-        android:ems="10"
-        android:id="@+id/password1Edit"
-        android:hint="Retype Password"
-        android:background="@android:drawable/editbox_dropdown_light_frame"
-        android:layout_marginTop="28dp"
-        android:layout_below="@+id/passwordEdit"
-        android:layout_alignLeft="@+id/passwordEdit"
-        android:layout_alignStart="@+id/passwordEdit" />
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="30dp"
+                android:inputType="textPassword"
+                android:ems="10"
+                android:id="@+id/passwordEdit"
+                android:hint="Password"
+                android:background="@android:drawable/editbox_dropdown_light_frame"
+                android:layout_below="@+id/gradYearEdit"
+                android:layout_alignLeft="@+id/gradYearEdit"
+                android:layout_alignStart="@+id/gradYearEdit"/>
 
-    <TextView android:text = "Passwords must match."
-        android:layout_width="wrap_content"
-        android:layout_height = "wrap_content"
-        android:id = "@+id/textview1"
-        android:ems="10"
-        android:textSize = "15dp"
-        android:visibility="invisible"
-        tools:gravity="center_vertical|center_horizontal"
-        android:gravity="center_vertical|center_horizontal"
-        android:layout_above="@+id/button2"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="19dp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="100dp"
+                android:src="@drawable/profile"
+                android:id="@+id/profile_image"
+                android:layout_below="@id/edit_profile_button"
+                android:layout_marginTop="20dp"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimary"
+                android:id="@+id/add_img_button"
+                android:layout_toRightOf="@id/profile_image"
+                android:layout_alignBottom="@id/profile_image"
+                android:text="Add Img"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/save_image_button"
+                android:layout_below="@id/add_img_button"
+                android:layout_toRightOf="@id/profile_image"
+                android:background="@color/colorAccent"
+                android:layout_margin="10dp"
+                android:text="Save Img"
+                android:visibility="invisible" />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:ems="10"
+                android:id="@+id/password1Edit"
+                android:hint="Retype Password"
+                android:background="@android:drawable/editbox_dropdown_light_frame"
+                android:layout_marginTop="28dp"
+                android:layout_below="@+id/passwordEdit"
+                android:layout_alignLeft="@+id/passwordEdit"
+                android:layout_alignStart="@+id/passwordEdit" />
+
+            <TextView android:text = "Passwords must match."
+                android:layout_width="wrap_content"
+                android:layout_height = "wrap_content"
+                android:id = "@+id/textview1"
+                android:ems="10"
+                android:textSize = "15dp"
+                android:visibility="invisible"
+                tools:gravity="center_vertical|center_horizontal"
+                android:gravity="center_vertical|center_horizontal"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="19dp" />
+
+        </LinearLayout>
+    </ScrollView>
+
+
+
 
 
 </RelativeLayout>
