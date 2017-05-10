@@ -1,7 +1,11 @@
 package com.example.edmundconnor.clubemmobile;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -17,6 +21,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -30,6 +35,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -77,6 +84,12 @@ public class NavigationActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         displaySelectedScreen(R.id.nav_feed);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setProfileImage();
     }
 
     @Override
@@ -187,5 +200,29 @@ public class NavigationActivity extends AppCompatActivity
         );
         Volley.newRequestQueue(this).add(getRequest);
         //Log.i("Club Name here", jsonArray[0].toString());
+    }
+
+
+    public Bitmap getThumbnail(String filename) {
+
+        Bitmap thumbnail = null;
+
+        if (thumbnail == null) {
+            try {
+                File filePath = getBaseContext().getFileStreamPath(filename);
+                FileInputStream fi = new FileInputStream(filePath);
+                thumbnail = BitmapFactory.decodeStream(fi);
+                final ImageView imageView = (ImageView) findViewById(R.id.nav_header_image);
+                imageView.setImageBitmap(thumbnail);
+                imageView.setRotation(90);
+            } catch (Exception ex) {
+
+            }
+        }
+        return thumbnail;
+    }
+
+    public void setProfileImage() {
+        Bitmap bitmap = getThumbnail("profileImage.png");
     }
 }
