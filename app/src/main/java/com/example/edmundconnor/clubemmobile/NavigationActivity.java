@@ -6,6 +6,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -15,11 +16,34 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.example.edmundconnor.clubemmobile.LoginActivity.ID;
 import static com.example.edmundconnor.clubemmobile.R.id.nav_feed;
+import static com.example.edmundconnor.clubemmobile.R.id.profile;
 
 public class NavigationActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private String url = "https://clubs-jhu.herokuapp.com/clubs/api/user/";
+    private String userName;
+
+    private final Map<String, String> profile = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,12 +53,15 @@ public class NavigationActivity extends AppCompatActivity
 
         // Get the Intent that started this activity and extract the string
         Intent intent = getIntent();
-        String id = intent.getStringExtra(LoginActivity.ID);
+        String id = intent.getStringExtra(ID);
         Integer userId = Integer.parseInt(id);
         System.out.println(userId);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        url = url + userId;
+
+        setProfile();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -128,5 +155,31 @@ public class NavigationActivity extends AppCompatActivity
 
         displaySelectedScreen(id);
         return true;
+    }
+
+    public void setProfile() {
+        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            System.out.println(response);
+                            TextView navName = (TextView) findViewById(R.id.nav_profile_name);
+                            navName.setText(response.getString("name"));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                        Log.d("Error", "Error");
+                    }
+                }
+        );
+        Volley.newRequestQueue(this).add(getRequest);
+        //Log.i("Club Name here", jsonArray[0].toString());
     }
 }

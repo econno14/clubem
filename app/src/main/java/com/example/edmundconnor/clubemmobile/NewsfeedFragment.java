@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.IntegerRes;
 import android.support.v4.app.Fragment;
 import android.test.suitebuilder.TestMethod;
 import android.util.Log;
@@ -14,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -25,6 +27,9 @@ import com.example.edmundconnor.clubemmobile.R;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.example.edmundconnor.clubemmobile.AllClubsFragment.clubDESC;
 import static com.example.edmundconnor.clubemmobile.AllClubsFragment.clubID;
@@ -55,7 +60,7 @@ public class NewsfeedFragment extends Fragment {
     private String[] suggestedClubNames;
     private String[] suggestedClubDescriptions;
     private Integer[] suggestedClubIds;
-    private JSONObject[] jsonArray;
+    protected static SelectEventAdapter seAdapter;
     private ListView lv;
     private LayoutInflater layoutinflater;
     public static final String eventID = "com.example.edmundconnor.clubemmobile.eventID";
@@ -75,15 +80,18 @@ public class NewsfeedFragment extends Fragment {
         url3 = url + uid + "/suggestedEvents";
         url4 = url + uid + "/suggestedClubs";
 
-
         getUpcomingPublicEvents();
         getTrendingEvents();
         getSuggestedEvents();
         getSuggestedClubs();
         getTrendingClubs();
-
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -98,8 +106,11 @@ public class NewsfeedFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
                 Intent intent = new Intent(getActivity(), EventActivity.class);
+                position--;
                 Integer cid = publicEventIds[position];
-                String event_id = cid.toString();
+                System.out.println("**************** " + cid);
+                String event_id = Integer.toString(cid);
+                System.out.print("Event Id " + event_id);
                 intent.putExtra(eventID, event_id);
                 intent.putExtra(eventNAME, publicEventNames[position]);
                 intent.putExtra(eventDESC, publicEventDescriptions[position]);
@@ -115,8 +126,10 @@ public class NewsfeedFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
                 Intent intent = new Intent(getActivity(), EventActivity.class);
-                Integer cid = trendingClubIds[position];
-                String event_id = cid.toString();
+                position--; //NEEDED for error handling issue idk
+                Integer cid = trendingEventIds[position];
+                String event_id = Integer.toString(cid);
+                System.out.println("**************** " + cid);
                 intent.putExtra(eventID, event_id);
                 intent.putExtra(eventNAME, trendingClubNames[position]);
                 intent.putExtra(eventDESC, tredingClubDescriptions[position]);
@@ -132,8 +145,10 @@ public class NewsfeedFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
                 Intent intent = new Intent(getActivity(), EventActivity.class);
+                position--; //NEEDED because array adapter starts at 1
                 Integer cid = suggestedEventIds[position];
-                String event_id = cid.toString();
+                String event_id = Integer.toString(cid);
+                System.out.print("Event Id " + event_id);
                 intent.putExtra(eventID, event_id);
                 intent.putExtra(eventNAME, suggestedEventNames[position]);
                 intent.putExtra(eventDESC, suggestedEventDescriptions[position]);
@@ -149,8 +164,9 @@ public class NewsfeedFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
                 Intent intent = new Intent(getActivity(), PublicClubActivity.class);
+                position--;
                 Integer cid = suggestedClubIds[position];
-                String club_id = cid.toString();
+                String club_id = Integer.toString(cid);
                 intent.putExtra(clubID, club_id);
                 intent.putExtra(clubNAME, suggestedClubNames[position]);
                 intent.putExtra(clubDESC, suggestedClubDescriptions[position]);
@@ -166,8 +182,9 @@ public class NewsfeedFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
                 Intent intent = new Intent(getActivity(), PublicClubActivity.class);
+                position--;
                 Integer cid = trendingClubIds[position];
-                String club_id = cid.toString();
+                String club_id = Integer.toString(cid);
                 intent.putExtra(clubID, club_id);
                 intent.putExtra(clubNAME, trendingClubNames[position]);
                 intent.putExtra(clubDESC, tredingClubDescriptions[position]);
@@ -185,25 +202,31 @@ public class NewsfeedFragment extends Fragment {
                     public void onResponse(JSONObject response) {
                         System.out.println(publicEventNames == null);
                         try {
+                            System.out.print("HERE 1, ");
                             JSONArray events = response.getJSONArray("events");
                             publicEventNames = new String[events.length()];
                             publicEventDescriptions = new String[events.length()];
                             publicEventIds = new Integer[events.length()];
+                            //List<Event> publicEvents = new ArrayList<Event>();
                             //jsonArray = new JSONObject[clubs.length()];
                             for (int i = 0; i < events.length(); i++) {
                                 JSONObject event = events.getJSONObject(i);
                                 //jsonArray[i] = club;
                                 //Log.i("Events", club.toString());
-
+                                System.out.print("HERE i, ");
                                 String name = event.getString("name");
                                 String description = event.getString("description");
-                                Integer id = event.getInt("eventId");
+                                //Integer id = event.getInt("eventId");
+                                String date = event.getString("date");
                                 publicEventNames[i] = name;
-                                publicEventIds[i] = id;
+                                publicEventIds[i] = event.getInt("eventId");
+                                //System.out.print("Event ID " + publicEventIds[i]);
                                 publicEventDescriptions[i] = description;
-
+                                //Event temp = new Event(id, name, description, date);
+                                //publicEvents.add(temp);
 
                             }
+                            System.out.print("HERE 2, ");
                             lv = (ListView) getView().findViewById(R.id.list_upcomingPublicEvents);
                             ArrayAdapter<String> lvAdapter = new ArrayAdapter(
                                     getActivity(),

@@ -27,6 +27,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
+        android:text="Justin Chung"
+        android:ems="10"
+        android:id="@+id/name"
+        android:layout_alignBaseline="@+id/editText7"
+        android:layout_alignBottom="@+id/editText7"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
         android:text="2017"
         android:ems="10"
         android:layout_alignBottom="@+id/editText8"
@@ -74,18 +86,35 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/editText12"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="49dp"
+        android:layout_marginTop="30dp"
         android:id="@+id/button2" />
 
-    <EditText
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="100dp"
+        android:src="@drawable/profile"
+        android:id="@+id/profile_image"
+        android:layout_below="@id/button2"
+        android:layout_marginTop="20dp"/>
+
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:text="Justin Chung"
-        android:ems="10"
-        android:id="@+id/name"
-        android:layout_alignBaseline="@+id/editText7"
-        android:layout_alignBottom="@+id/editText7"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:background="@color/colorPrimary"
+        android:id="@+id/add_img_butotn"
+        android:layout_toRightOf="@id/profile_image"
+        android:layout_alignBottom="@id/profile_image"
+        android:text="Add Img"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/save_image_button"
+        android:layout_below="@id/add_img_butotn"
+        android:layout_toRightOf="@id/profile_image"
+        android:background="@color/colorAccent"
+        android:layout_margin="10dp"
+        android:text="Save Img"
+        android:visibility="invisible"/>
+
 </RelativeLayout>
