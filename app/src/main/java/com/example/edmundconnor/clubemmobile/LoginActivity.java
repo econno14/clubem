@@ -38,6 +38,8 @@ public class LoginActivity extends Activity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+
+
         login = (Button)findViewById(R.id.login);
         editEmail = (EditText)findViewById(R.id.email);
         editPw = (EditText)findViewById(R.id.pw);

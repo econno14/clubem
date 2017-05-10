@@ -13,4 +13,23 @@
 
     <string name="create_event">Create Event</string>
 
+
+    <string-array name="tags">
+        <item>Academic</item>
+        <item>Art</item>
+        <item>Athletics</item>
+        <item>Cultural</item>
+        <item>Dance</item>
+        <item>Media</item>
+        <item>Music</item>
+        <item>Professional</item>
+        <item>Religious</item>
+        <item>Singing</item>
+        <item>Social</item>
+        <item>Sports</item>
+        <item>Technology</item>
+    </string-array>
+
+
+
 </resources>

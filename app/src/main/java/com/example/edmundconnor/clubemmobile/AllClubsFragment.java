@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
@@ -34,6 +35,7 @@ public class AllClubsFragment extends Fragment {
     private int [] clubIds;
     private JSONObject[] jsonArray;
     private ListView lv;
+    private Button createClub;
     public static final String clubID = "com.example.edmundconnor.clubemmobile.clubID";
     public static final String clubNAME = "com.example.edmundconnor.clubemmobile.clubNAME";
     public static final String clubDESC = "com.example.edmundconnor.clubemmobile.clubDESC";
@@ -52,6 +54,7 @@ public class AllClubsFragment extends Fragment {
         clubNames[0] = "empty";
 
         getAllClubs();
+
 
     }
 
@@ -73,6 +76,15 @@ public class AllClubsFragment extends Fragment {
                 intent.putExtra(clubID, club_id);
                 intent.putExtra(clubNAME, clubNames[position]);
                 intent.putExtra(clubDESC, clubDescriptions[position]);
+                startActivity(intent);
+            }
+        });
+
+        createClub = (Button) view.findViewById(R.id.create_club_button);
+
+        createClub.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), CreateClubActivity.class);
                 startActivity(intent);
             }
         });
