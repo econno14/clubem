@@ -20,6 +20,9 @@ import static com.example.edmundconnor.clubemmobile.R.id.nav_feed;
 
 public class NavigationActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    String id1;
+    public static final String ID = "com.example.edmundconnor.clubemmobile.ID";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,8 +32,8 @@ public class NavigationActivity extends AppCompatActivity
 
         // Get the Intent that started this activity and extract the string
         Intent intent = getIntent();
-        String id = intent.getStringExtra(LoginActivity.ID);
-        Integer userId = Integer.parseInt(id);
+        id1 = intent.getStringExtra(LoginActivity.ID);
+        Integer userId = Integer.parseInt(id1);
         System.out.println(userId);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -81,12 +84,13 @@ public class NavigationActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.settings) {
-            Intent intent = new Intent(NavigationActivity.this, SettingsActivity.class);
+            Intent intent = new Intent(NavigationActivity.this, LoginActivity .class);
             startActivity(intent);
             return true;
         }
         if (id == R.id.profile) {
-            Intent intent = new Intent(NavigationActivity.this, ProfileActivity.class);
+            Intent intent = new Intent(NavigationActivity.this, ShowProfile.class);
+            intent.putExtra(ID, id1);
             startActivity(intent);
             return true;
         }
