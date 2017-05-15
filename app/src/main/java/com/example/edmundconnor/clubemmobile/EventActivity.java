@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -17,7 +19,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class EventActivity extends AppCompatActivity {
@@ -32,7 +36,6 @@ public class EventActivity extends AppCompatActivity {
     private final Map<String, String> eventInfo = new HashMap<>();
     private String url = "https://clubs-jhu.herokuapp.com/clubs/api/";
     private String url2;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +68,15 @@ public class EventActivity extends AppCompatActivity {
                             eventLocation.setText(response.getString("location"));
                             eventStartTime.setText(response.getString("startDate"));
                             eventEndTime.setText(response.getString("endDate"));
+                            /*
+                            ArrayList<String> eTags = (ArrayList<String>) response.get("tags");
+                            ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+                                    getApplicationContext(),
+                                    android.R.layout.simple_list_item_1,
+                                    eTags
+                            );
+                            eventTags.setAdapter(adapter);
+                            */
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -23,6 +24,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import static com.example.edmundconnor.clubemmobile.LoginActivity.ID;
+import static com.example.edmundconnor.clubemmobile.NewsfeedFragment.eventDESC;
+import static com.example.edmundconnor.clubemmobile.NewsfeedFragment.eventID;
+import static com.example.edmundconnor.clubemmobile.NewsfeedFragment.eventNAME;
 
 public class PublicClubActivity extends AppCompatActivity {
 
@@ -34,6 +38,7 @@ public class PublicClubActivity extends AppCompatActivity {
     String[] clubEventDate;
     String[] membersName;
     String[] clubAdmin;
+    Integer[] clubEventId;
     private static String club_desc, club_name;
     private ListView lv;
     private ListView lav;
@@ -71,6 +76,24 @@ public class PublicClubActivity extends AppCompatActivity {
 
         getClubEvents();
         getClubMembers();
+
+        ListView clubEvents = (ListView) findViewById(R.id.list_publicClubEvents);
+
+        clubEvents.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                Intent intent = new Intent(getApplicationContext(), EventActivity.class);
+                position--;
+                Integer cid = clubEventId[position];
+                String event_id = Integer.toString(cid);
+                intent.putExtra(eventID, event_id);
+                intent.putExtra(eventNAME, clubEventName[position]);
+                intent.putExtra(eventDESC, clubEventDescription[position]);
+                startActivity(intent);
+            }
+        });
     }
 
     public void applyToClub() {
@@ -111,6 +134,7 @@ public class PublicClubActivity extends AppCompatActivity {
                             clubEventLocation = new String[events.length()];
                             clubEventDescription = new String[events.length()];
                             clubEventDate = new String[events.length()];
+                            clubEventId = new Integer[events.length()];
                             //jsonArray = new JSONObject[clubs.length()];
                             for (int i = 0; i < events.length(); i++) {
                                 JSONObject event = events.getJSONObject(i);
@@ -121,11 +145,12 @@ public class PublicClubActivity extends AppCompatActivity {
                                 String description = event.getString("description");
                                 String location = event.getString("location");
                                 String startDate = event.getString("startDate");
-                                //Integer id = event.getInt("eventId");
+                                Integer id = event.getInt("eventId");
                                 clubEventName[i] = name;
                                 clubEventLocation[i] = location;
                                 clubEventDescription[i] = description;
                                 clubEventDate[i] = startDate;
+                                clubEventId[i] = id;
 
                             }
                             lv = (ListView) findViewById(R.id.list_publicClubEvents);
