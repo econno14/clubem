@@ -6,97 +6,108 @@
     android:padding="10dp"
     android:fillViewport="false">
 
-    <RelativeLayout
-        xmlns:tools="http://schemas.android.com/tools"
+    <LinearLayout
+        android:orientation="vertical"
         android:id="@+id/activity_sign_up"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
+        android:layout_height="wrap_content"
+        android:paddingTop="56dp"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
         tools:context="com.example.edmundconnor.clubemmobile.SignUpActivity">
 
-        <TextView android:text = "Please Sign Up"
+        <ImageView android:src="@drawable/club"
             android:layout_width="wrap_content"
-            android:layout_height = "wrap_content"
-            android:id = "@+id/textview"
-            android:textSize = "35dp"
-            android:layout_alignParentTop = "true"
-            android:layout_centerHorizontal = "true" />
+            android:layout_height="72dp"
+            android:layout_marginBottom="24dp"
+            android:layout_gravity="center_horizontal" />
 
-        <EditText
-            android:layout_width="wrap_content"
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textPersonName"
-            android:ems="10"
-            android:layout_below="@+id/textview"
-            android:layout_alignLeft="@+id/textview"
-            android:layout_alignStart="@+id/textview"
-            android:layout_marginTop="35dp"
-            android:id="@+id/nameSignUp"
-            android:hint="Name"
-            android:background="@android:drawable/editbox_dropdown_light_frame" />
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp">
+            <TextView android:text = "Please Sign Up"
+                android:layout_width="match_parent"
+                android:layout_height = "wrap_content"
+                android:id = "@+id/textview"/>
+        </android.support.design.widget.TextInputLayout>
 
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp">
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:id="@+id/nameSignUp"
+                android:hint="Name" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp">
         <EditText
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="number"
-            android:ems="10"
-            android:layout_below="@+id/emailSignUp"
-            android:layout_alignLeft="@+id/emailSignUp"
-            android:layout_alignStart="@+id/emailSignUp"
-            android:layout_marginTop="35dp"
             android:id="@+id/gradYearSignUp"
-            android:hint="Grad Year"
-            android:background="@android:drawable/editbox_dropdown_light_frame" />
+            android:hint="Grad Year"/>
+        </android.support.design.widget.TextInputLayout>
 
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp">
         <EditText
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPassword"
-            android:ems="10"
-            android:layout_marginTop="35dp"
             android:id="@+id/passwordSignUp"
-            android:hint="Password"
-            android:layout_below="@+id/gradYearSignUp"
-            android:layout_alignLeft="@+id/gradYearSignUp"
-            android:layout_alignStart="@+id/gradYearSignUp"
-            android:background="@android:drawable/editbox_dropdown_light_frame" />
+            android:hint="Password"/>
+        </android.support.design.widget.TextInputLayout>
 
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp">
         <EditText
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
-            android:ems="10"
-            android:layout_marginTop="20dp"
             android:id="@+id/emailSignUp"
-            android:hint="Email"
-            android:layout_below="@+id/nameSignUp"
-            android:layout_alignLeft="@+id/nameSignUp"
-            android:layout_alignStart="@+id/nameSignUp"
-            android:background="@android:drawable/editbox_dropdown_light_frame" />
+            android:hint="Email"/>
+        </android.support.design.widget.TextInputLayout>
 
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp">
         <EditText
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPassword"
-            android:ems="10"
-            android:layout_marginTop="35dp"
             android:id="@+id/password1SignUp"
-            android:hint="Retype Password"
-            android:background="@android:drawable/editbox_dropdown_light_frame"
-            android:layout_below="@+id/passwordSignUp"
-            android:layout_alignLeft="@+id/passwordSignUp"
-            android:layout_alignStart="@+id/passwordSignUp" />
+            android:hint="Retype Password"/>
+        </android.support.design.widget.TextInputLayout>
 
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp">
         <TextView android:text = "Passwords must match."
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height = "wrap_content"
             android:id = "@+id/textview1"
-            android:layout_marginTop="20dp"
-            android:ems="10"
-            android:textSize = "15dp"
             android:layout_below="@+id/password1SignUp"
             android:layout_alignLeft="@+id/password1SignUp"
             android:layout_alignStart="@+id/password1SignUp"
@@ -104,15 +115,19 @@
             android:layout_centerHorizontal="true"
             tools:gravity="center_vertical|center_horizontal"
             android:gravity="center_vertical|center_horizontal" />
+        </android.support.design.widget.TextInputLayout>
 
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp">
         <Button
             android:text="Sign Up"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/buttonSignUp"
-            android:textSize="24sp"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@+id/retypePassword" />
-    </RelativeLayout>
+            android:id="@+id/buttonSignUp"/>
+        </android.support.design.widget.TextInputLayout>
+
+    </LinearLayout>
 </ScrollView>

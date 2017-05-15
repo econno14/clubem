@@ -12,35 +12,37 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp">
             <EditText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:inputType="textPersonName"
-                android:text="Justin Chung"
-                android:ems="10"
-                android:id="@+id/name"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true" />
-
-            <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:inputType="textPersonName"
-                android:text="2017"
                 android:ems="10"
                 android:id="@+id/nameEdit"
                 android:hint="Name"
-                android:background="@android:drawable/editbox_dropdown_light_frame"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="47dp" />
+            </android.support.design.widget.TextInputLayout>
 
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp">
             <EditText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -48,22 +50,18 @@
                 android:ems="10"
                 android:id="@+id/emailEdit"
                 android:hint="Email"
-                android:background="@android:drawable/editbox_dropdown_light_frame"
                 android:layout_alignTop="@+id/nameEdit"
                 android:layout_alignLeft="@+id/nameEdit"
                 android:layout_alignStart="@+id/nameEdit"
                 android:layout_marginTop="69dp" />
+            </android.support.design.widget.TextInputLayout>
 
 
-            <Button
-                android:text="Edit"
-                android:layout_width="wrap_content"
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/edit_profile_button"
-                android:layout_marginBottom="37dp"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true" />
-
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp">
             <EditText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -71,12 +69,17 @@
                 android:ems="10"
                 android:id="@+id/gradYearEdit"
                 android:hint="Grad Year"
-                android:background="@android:drawable/editbox_dropdown_light_frame"
                 android:layout_below="@+id/emailEdit"
                 android:layout_alignLeft="@+id/emailEdit"
                 android:layout_alignStart="@+id/emailEdit"
                 android:layout_marginTop="48dp" />
+            </android.support.design.widget.TextInputLayout>
 
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp">
             <EditText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -86,18 +89,47 @@
                 android:ems="10"
                 android:id="@+id/passwordEdit"
                 android:hint="Password"
-                android:background="@android:drawable/editbox_dropdown_light_frame"
                 android:layout_below="@+id/gradYearEdit"
                 android:layout_alignLeft="@+id/gradYearEdit"
                 android:layout_alignStart="@+id/gradYearEdit"/>
+            </android.support.design.widget.TextInputLayout>
 
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp">
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:ems="10"
+                android:id="@+id/password1Edit"
+                android:hint="Retype Password"
+                android:layout_marginTop="28dp"
+                android:layout_below="@+id/passwordEdit"
+                android:layout_alignLeft="@+id/passwordEdit"
+                android:layout_alignStart="@+id/passwordEdit" />
+            </android.support.design.widget.TextInputLayout>
+
+            <TextView android:text = "Passwords must match."
+                android:layout_width="wrap_content"
+                android:layout_height = "wrap_content"
+                android:id = "@+id/textview1"
+                android:ems="10"
+                android:textSize = "15dp"
+                android:visibility="invisible"
+                tools:gravity="center_vertical|center_horizontal"
+                android:gravity="center_vertical|center_horizontal"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="19dp" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="100dp"
                 android:src="@drawable/profile"
                 android:id="@+id/profile_image"
-                android:layout_below="@id/edit_profile_button"
                 android:layout_marginTop="20dp"/>
 
             <Button
@@ -120,36 +152,17 @@
                 android:text="Save Img"
                 android:visibility="invisible" />
 
-            <EditText
+            <Button
+                android:text="Save new profile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:inputType="textPassword"
-                android:ems="10"
-                android:id="@+id/password1Edit"
-                android:hint="Retype Password"
-                android:background="@android:drawable/editbox_dropdown_light_frame"
-                android:layout_marginTop="28dp"
-                android:layout_below="@+id/passwordEdit"
-                android:layout_alignLeft="@+id/passwordEdit"
-                android:layout_alignStart="@+id/passwordEdit" />
-
-            <TextView android:text = "Passwords must match."
-                android:layout_width="wrap_content"
-                android:layout_height = "wrap_content"
-                android:id = "@+id/textview1"
-                android:ems="10"
-                android:textSize = "15dp"
-                android:visibility="invisible"
-                tools:gravity="center_vertical|center_horizontal"
-                android:gravity="center_vertical|center_horizontal"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="19dp" />
+                android:id="@+id/edit_profile_button"
+                android:layout_marginBottom="37dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true" />
 
         </LinearLayout>
     </ScrollView>
-
-
-
 
 
 </RelativeLayout>

@@ -19,7 +19,7 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait" ></activity>
         <activity android:name=".SettingsActivity" />
-        <activity android:name=".ProfileActivity" />
+        <activity android:name=".ProfileActivity" android:theme="@style/AppTheme.Dark" />
         <activity
             android:name=".LoginActivity"
             android:theme="@style/AppTheme.Dark"
@@ -30,10 +30,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SignUpActivity" />
+        <activity android:name=".SignUpActivity" android:theme="@style/AppTheme.Dark" />
         <activity android:name=".CreateEventActivity" />
         <activity android:name=".CreateClubActivity" />
-        <activity android:name=".ShowProfile"></activity>
+        <activity android:name=".ShowProfile" android:theme="@style/AppTheme.Dark"></activity>
         <activity android:name=".PrivateClubActivity" />
         <activity android:name=".PublicClubActivity" />
         <activity android:name=".EventActivity"></activity>

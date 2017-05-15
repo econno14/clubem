@@ -46,6 +46,7 @@ public class LoginActivity extends Activity  {
         txt = (TextView) findViewById(R.id.textview2);
 
         signUp = (Button)findViewById(R.id.signup);
+        txt.setVisibility(View.INVISIBLE);
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,6 +55,12 @@ public class LoginActivity extends Activity  {
                 final String email = editEmail.getText().toString();
                 System.out.println(password + email );
                 Log.d("params", email + " " + password);
+
+                if (password == null || email == null) {
+                    txt.setVisibility(View.VISIBLE);
+                    txt.setText("Please enter valid input.");
+                    return;
+                }
 
                 JSONObject jsonBody = new JSONObject();
                 try {
@@ -84,6 +91,7 @@ public class LoginActivity extends Activity  {
                             @Override
                             public void onErrorResponse(VolleyError error) {
                                 txt.setVisibility(View.VISIBLE);
+                                txt.setText("Invalid login.");
                                 Log.d("Error", "Error: " + error.getMessage());
                             }
                         }

@@ -56,6 +56,18 @@ public class SignUpActivity extends AppCompatActivity {
                     return;
                 }
 
+                if (gradYear.equals("")) {
+                    txt.setVisibility(View.VISIBLE);
+                    txt.setText("Enter valid year.");
+                    return;
+                }
+
+                if (Integer.parseInt(gradYear) < 1990 || Integer.parseInt(gradYear) > 2100) {
+                    txt.setVisibility(View.VISIBLE);
+                    txt.setText("Enter valid year.");
+                    return;
+                }
+
                 JSONObject jsonBody = new JSONObject();
                 try {
                     jsonBody.put("name", name);

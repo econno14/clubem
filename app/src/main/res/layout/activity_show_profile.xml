@@ -30,8 +30,17 @@
         android:layout_alignParentTop="true"
         android:layout_marginTop="20dp"
         android:id="@+id/t1"
-        android:textSize="24sp" />
+        android:textSize="36sp" />
 
+        <TextView
+            android:text="Name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/t4"
+            android:layout_alignRight="@+id/t1"
+            android:layout_alignEnd="@+id/t1"
+            android:textSize="20dp"
+            android:id="@+id/textView2" />
     <TextView
         android:text=""
         android:layout_width="wrap_content"
@@ -39,6 +48,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="80dp"
+        android:textSize="20dp"
         android:id="@+id/t2"
         android:textAlignment="center" />
 
@@ -50,6 +60,7 @@
         android:layout_alignLeft="@+id/t2"
         android:layout_alignStart="@+id/t2"
         android:layout_marginTop="50dp"
+        android:textSize="20dp"
         android:id="@+id/t3"
         android:textAlignment="center" />
 
@@ -61,7 +72,30 @@
         android:layout_alignLeft="@+id/t3"
         android:layout_alignStart="@+id/t3"
         android:layout_marginTop="50dp"
+        android:textSize="20dp"
         android:id="@+id/t4"
         android:textAlignment="center" />
+
+
+
+    <TextView
+        android:text="Email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/b1"
+        android:layout_alignRight="@+id/textView2"
+        android:layout_alignEnd="@+id/textView2"
+        android:textSize="20dp"
+        android:id="@+id/textView3" />
+
+    <TextView
+        android:text="Year"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView"
+        android:layout_above="@+id/t3"
+        android:textSize="20dp"
+        android:layout_alignRight="@+id/t1"
+        android:layout_alignEnd="@+id/t1" />
 
 </RelativeLayout>

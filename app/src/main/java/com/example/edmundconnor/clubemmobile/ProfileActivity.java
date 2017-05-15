@@ -45,7 +45,7 @@ public class ProfileActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().setTitle("ProfileActivity");
+        //getSupportActionBar().setTitle("ProfileActivity");
         setContentView(R.layout.activity_profile);
       
       name_ = (EditText)findViewById(R.id.nameEdit);

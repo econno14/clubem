@@ -11,7 +11,7 @@
     tools:context="com.example.edmundconnor.clubemmobile.LoginActivity">
 
 
-    <ImageView android:src="@drawable/clubem"
+    <ImageView android:src="@drawable/club"
         android:layout_width="wrap_content"
         android:layout_height="72dp"
         android:layout_marginBottom="24dp"
