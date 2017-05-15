@@ -1,6 +1,7 @@
 package com.example.edmundconnor.clubemmobile;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
@@ -47,7 +48,7 @@ import static com.example.edmundconnor.clubemmobile.R.id.profile;
 public class NavigationActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     String id1;
-    public static final String ID = "com.example.edmundconnor.clubemmobile.ID";
+    //public static final String ID = "com.example.edmundconnor.clubemmobile.ID";
 
 
     private String url = "https://clubs-jhu.herokuapp.com/clubs/api/user/";
@@ -66,6 +67,12 @@ public class NavigationActivity extends AppCompatActivity
 
         id1 = intent.getStringExtra(LoginActivity.ID);
         Integer userId = Integer.parseInt(id1);
+
+        SharedPreferences myPrefs = getSharedPreferences("myPrefs", getApplicationContext().MODE_PRIVATE);
+        SharedPreferences.Editor editor = myPrefs.edit();
+        editor.putString("ID", id1);
+        editor.commit();
+
 
         System.out.println(userId);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

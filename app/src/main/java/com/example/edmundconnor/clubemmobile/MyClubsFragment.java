@@ -43,7 +43,6 @@ public class MyClubsFragment extends Fragment {
     public static final String clubID = "com.example.edmundconnor.clubemmobile.clubID";
     public static final String clubNAME = "com.example.edmundconnor.clubemmobile.clubNAME";
     public static final String clubDESC = "com.example.edmundconnor.clubemmobile.clubDESC";
-    public static final String clubROLE = "com.example.edmundconnor.clubemmobile.clubROLE";
 
     public MyClubsFragment() {
         // Required empty public constructor
