@@ -48,7 +48,7 @@ public class ProfileActivity extends AppCompatActivity {
         //getSupportActionBar().setTitle("ProfileActivity");
         setContentView(R.layout.activity_profile);
       
-      name_ = (EditText)findViewById(R.id.nameEdit);
+        name_ = (EditText)findViewById(R.id.nameEdit);
         email_ = (EditText)findViewById(R.id.emailEdit);
         year_ = (EditText)findViewById(R.id.gradYearEdit);
         pw_ = (EditText)findViewById(R.id.passwordEdit);
@@ -123,6 +123,8 @@ public class ProfileActivity extends AppCompatActivity {
         addImgButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //Button saveImage = (Button) findViewById(R.id.save_image_button);
+                //saveImage.setVisibility(View.VISIBLE);
                 Intent intent = new Intent();
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -140,19 +142,13 @@ public class ProfileActivity extends AppCompatActivity {
             Uri uri = data.getData();
 
             try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                final Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
                 // Log.d(TAG, String.valueOf(bitmap));
                 saveImageToInternalStorage(bitmap);
-                ImageView imageView = (ImageView) findViewById(R.id.profile_image);
+                final ImageView imageView = (ImageView) findViewById(R.id.profile_image);
                 imageView.setImageBitmap(bitmap);
                 imageView.setRotation(90);
-                Button saveImage = (Button) findViewById(R.id.save_image_button);
-                saveImage.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                    }
-                });
+                final Button saveImage = (Button) findViewById(R.id.save_image_button);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -162,49 +158,13 @@ public class ProfileActivity extends AppCompatActivity {
     public boolean saveImageToInternalStorage(Bitmap image) {
 
         try {
-
             FileOutputStream fos = getBaseContext().openFileOutput("profileImage.png", Context.MODE_PRIVATE);
-
             image.compress(Bitmap.CompressFormat.PNG, 100, fos);
             fos.close();
-
             return true;
         } catch (Exception e) {
             Log.e("saveToInternalStorage()", e.getMessage());
             return false;
         }
-    }
-
-    public boolean isSdReadable() {
-
-        boolean mExternalStorageAvailable = false;
-        String state = Environment.getExternalStorageState();
-
-        if (Environment.MEDIA_MOUNTED.equals(state)) {
-            mExternalStorageAvailable = true;
-            Log.i("isSdReadable", "External storage card is readable.");
-        } else if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
-            Log.i("isSdReadable", "External storage card is readable.");
-            mExternalStorageAvailable = true;
-        } else {
-            mExternalStorageAvailable = false;
-        }
-        return mExternalStorageAvailable;
-    }
-
-    public Bitmap getThumbnail(String filename) {
-
-        Bitmap thumbnail = null;
-
-        if (thumbnail == null) {
-            try {
-                File filePath = getBaseContext().getFileStreamPath(filename);
-                FileInputStream fi = new FileInputStream(filePath);
-                thumbnail = BitmapFactory.decodeStream(fi);
-            } catch (Exception ex) {
-
-            }
-        }
-        return thumbnail;
     }
 }
