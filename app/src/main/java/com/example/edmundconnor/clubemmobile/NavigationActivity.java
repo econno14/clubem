@@ -73,8 +73,6 @@ public class NavigationActivity extends AppCompatActivity
 
         url = url + userId;
 
-        setProfile();
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -89,6 +87,7 @@ public class NavigationActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
+        setProfile();
         setProfileImage();
     }
 
@@ -214,7 +213,7 @@ public class NavigationActivity extends AppCompatActivity
                 thumbnail = BitmapFactory.decodeStream(fi);
                 final ImageView imageView = (ImageView) findViewById(R.id.nav_header_image);
                 imageView.setImageBitmap(thumbnail);
-                imageView.setRotation(90);
+                imageView.setRotation(-90);
             } catch (Exception ex) {
 
             }

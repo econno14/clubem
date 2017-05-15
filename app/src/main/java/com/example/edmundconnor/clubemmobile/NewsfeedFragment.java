@@ -60,7 +60,7 @@ public class NewsfeedFragment extends Fragment {
     private String[] suggestedClubNames;
     private String[] suggestedClubDescriptions;
     private Integer[] suggestedClubIds;
-    protected static SelectEventAdapter seAdapter;
+    protected static EventAdapter seAdapter;
     private ListView lv;
     private LayoutInflater layoutinflater;
     public static final String eventID = "com.example.edmundconnor.clubemmobile.eventID";

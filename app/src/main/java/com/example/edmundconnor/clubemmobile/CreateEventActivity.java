@@ -36,6 +36,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -111,6 +112,12 @@ public class CreateEventActivity extends AppCompatActivity {
         String date = eventDate.getMonth() + "-" + eventDate.getDayOfMonth() + "-" + eventDate.getYear();
         String start_date = date + " " + startTime.getCurrentHour() + ":" + startTime.getCurrentMinute();
         String end_date = date + " " + endTime.getCurrentHour() + ":" + endTime.getCurrentMinute();
+
+        Calendar c = Calendar.getInstance();
+        Calendar now = Calendar.getInstance();
+        c.set(eventDate.getYear(), eventDate.getMonth(), eventDate.getDayOfMonth(), startTime.getCurrentHour(), startTime.getCurrentMinute());
+        c.set(eventDate.getYear(), eventDate.getMonth(), eventDate.getDayOfMonth(), endTime.getCurrentHour(), endTime.getCurrentMinute());
+
         try {
             System.out.print("HERE");
             jsonBody.put("name", eventName.getText().toString());
