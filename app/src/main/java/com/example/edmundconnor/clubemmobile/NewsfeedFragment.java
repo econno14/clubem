@@ -108,12 +108,10 @@ public class NewsfeedFragment extends Fragment {
                 Intent intent = new Intent(getActivity(), EventActivity.class);
                 position--;
                 Integer cid = publicEventIds[position];
-                System.out.println("**************** " + cid);
                 String event_id = Integer.toString(cid);
-                System.out.print("Event Id " + event_id);
                 intent.putExtra(eventID, event_id);
-                intent.putExtra(eventNAME, publicEventNames[position]);
-                intent.putExtra(eventDESC, publicEventDescriptions[position]);
+                intent.putExtra(eventNAME, trendingClubNames[position]);
+                intent.putExtra(eventDESC, tredingClubDescriptions[position]);
                 startActivity(intent);
             }
         });
@@ -217,7 +215,7 @@ public class NewsfeedFragment extends Fragment {
                                 String name = event.getString("name");
                                 String description = event.getString("description");
                                 //Integer id = event.getInt("eventId");
-                                String date = event.getString("date");
+                                //String date = event.getString("date");
                                 publicEventNames[i] = name;
                                 publicEventIds[i] = event.getInt("eventId");
                                 //System.out.print("Event ID " + publicEventIds[i]);

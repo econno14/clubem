@@ -23,6 +23,12 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.edmundconnor.clubemmobile.R;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -36,7 +42,10 @@ public class ProfileActivity extends AppCompatActivity {
     EditText name_, email_, year_, pw_, pwRe_;
     Button edit;
     TextView txt;
+    ImageView profileImg;
     public static final String ID = "com.example.edmundconnor.clubemmobile.ID";
+    private StorageReference mStorage;
+    private String imgRef;
 
     String url = "https://clubs-jhu.herokuapp.com/clubs/api/";
 
@@ -47,12 +56,15 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         //getSupportActionBar().setTitle("ProfileActivity");
         setContentView(R.layout.activity_profile);
+
+        mStorage = FirebaseStorage.getInstance().getReference();
       
         name_ = (EditText)findViewById(R.id.nameEdit);
         email_ = (EditText)findViewById(R.id.emailEdit);
         year_ = (EditText)findViewById(R.id.gradYearEdit);
         pw_ = (EditText)findViewById(R.id.passwordEdit);
         pwRe_ = (EditText) findViewById(R.id.password1Edit);
+        profileImg = (ImageView) findViewById(R.id.profile_image);
 
         edit = (Button)findViewById(R.id.edit_profile_button);
         txt = (TextView) findViewById(R.id.textview1);
@@ -62,6 +74,10 @@ public class ProfileActivity extends AppCompatActivity {
         Integer userId = Integer.parseInt(id);
         final String urlEnd = url + id + "/editUser";
         System.out.println(urlEnd);
+
+        // Retrieves Fire base Storage Reference
+        StorageReference mStorage = FirebaseStorage.getInstance().getReference();
+
 
 
         edit.setOnClickListener(new View.OnClickListener() {
@@ -138,20 +154,16 @@ public class ProfileActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-
             Uri uri = data.getData();
-
-            try {
-                final Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-                // Log.d(TAG, String.valueOf(bitmap));
-                saveImageToInternalStorage(bitmap);
-                final ImageView imageView = (ImageView) findViewById(R.id.profile_image);
-                imageView.setImageBitmap(bitmap);
-                imageView.setRotation(90);
-                final Button saveImage = (Button) findViewById(R.id.save_image_button);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            StorageReference filepath = mStorage.child("EventPhotos").child(uri.getLastPathSegment());
+            imgRef = filepath.getPath();
+            filepath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Uri downloadUri = taskSnapshot.getDownloadUrl();
+                    Picasso.with(ProfileActivity.this).load(downloadUri).fit().centerCrop().into(profileImg);
+                }
+            });
         }
     }
 
