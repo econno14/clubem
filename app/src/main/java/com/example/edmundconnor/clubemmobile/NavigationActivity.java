@@ -133,27 +133,35 @@ public class NavigationActivity extends AppCompatActivity
     }
 
     private void displaySelectedScreen(int id) {
+        Bundle bundle = new Bundle();
+        bundle.putString("id", id1);
         Fragment fragment = null;
+        //fragment.setArguments(bundle);
 
         switch (id) {
             case nav_feed:
                 fragment = new NewsfeedFragment();
+                fragment.setArguments(bundle);
                 getSupportActionBar().setTitle("Newsfeed");
                 break;
             case R.id.nav_calendar:
                 fragment = new CalendarFragment();
+                fragment.setArguments(bundle);
                 getSupportActionBar().setTitle("Calendar");
                 break;
             case R.id.nav_myClubs:
                 fragment = new MyClubsFragment();
+                fragment.setArguments(bundle);
                 getSupportActionBar().setTitle("My Clubs");
                 break;
             case R.id.nav_allClubs:
                 fragment = new AllClubsFragment();
+                fragment.setArguments(bundle);
                 getSupportActionBar().setTitle("All Clubs");
                 break;
             default:
                 fragment = new NewsfeedFragment();
+                fragment.setArguments(bundle);
                 getSupportActionBar().setTitle("Newsfeed");
                 break;
         }
