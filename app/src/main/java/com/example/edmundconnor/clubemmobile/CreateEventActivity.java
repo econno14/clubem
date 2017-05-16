@@ -16,11 +16,13 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -31,8 +33,12 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -50,6 +56,8 @@ import static com.example.edmundconnor.clubemmobile.LoginActivity.ID;
 
 public class CreateEventActivity extends AppCompatActivity {
 
+
+
     Button saveEvent;
     Button cancelEvent;
     private String url = "https://clubs-jhu.herokuapp.com/clubs/api/";
@@ -62,6 +70,12 @@ public class CreateEventActivity extends AppCompatActivity {
     private TimePicker startTime;
     private TimePicker endTime;
     private ListView eventTags;
+    protected int PICK_IMAGE_REQUEST = 1;
+    ImageView eventImage;
+
+    public StorageReference mStorage;
+    public Uri uri;
+    protected String imgReference;
 
     private GoogleApiClient client;
 
@@ -83,6 +97,20 @@ public class CreateEventActivity extends AppCompatActivity {
         startTime = (TimePicker) findViewById(R.id.event_start_time);
         endTime = (TimePicker) findViewById(R.id.event_end_time);
         eventTags = (ListView) findViewById(R.id.event_tags);
+        eventImage = (ImageView) findViewById(R.id.event_img);
+
+        Button addImage = (Button) findViewById(R.id.event_add_image);
+        Button addTags = (Button) findViewById(R.id.event_add_tags);
+
+        addImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+            }
+        });
 
 
         saveEvent = (Button) findViewById(R.id.event_save);
@@ -94,7 +122,7 @@ public class CreateEventActivity extends AppCompatActivity {
                     SharedPreferences myPrefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
                     String uID = myPrefs.getString("ID", "1");
                     intent.putExtra(ID, uID);
-                    startActivity(intent);
+                    //startActivity(intent);
                 } catch (JSONException e) {
                     System.out.println(e.getMessage());
                 }
@@ -106,6 +134,9 @@ public class CreateEventActivity extends AppCompatActivity {
         cancelEvent.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(CreateEventActivity.this, NavigationActivity.class);
+                SharedPreferences myPrefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
+                String uID = myPrefs.getString("ID", "1");
+                intent.putExtra(ID, uID);
                 startActivity(intent);
             }
         });
@@ -127,7 +158,7 @@ public class CreateEventActivity extends AppCompatActivity {
         //c.set(eventDate.getYear(), eventDate.getMonth(), eventDate.getDayOfMonth(), endTime.getCurrentHour(), endTime.getCurrentMinute());
 
         SharedPreferences myPrefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
-        String uID = myPrefs.getString("ID", "1");
+        final String uID = myPrefs.getString("ID", "1");
         try {
             System.out.print("YAAS");
             jsonBody.put("name", eventName.getText().toString());
@@ -146,8 +177,13 @@ public class CreateEventActivity extends AppCompatActivity {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-
+                        try {
+                            System.out.println("******************Event ID " + response.getInt("eventID"));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                         Intent intent = new Intent(CreateEventActivity.this, NavigationActivity.class);
+                        intent.putExtra(ID, uID);
                         startActivity(intent);
                     }
                 },
@@ -161,6 +197,28 @@ public class CreateEventActivity extends AppCompatActivity {
         ) {
         };
         Volley.newRequestQueue(getApplicationContext()).add(postRequest);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+
+            uri = data.getData();
+            // Stores image in firebase.
+            StorageReference filepath = mStorage.child("EventPhotos").child(uri.getLastPathSegment());
+            imgReference = filepath.getPath();
+
+            filepath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Uri downloadUri = taskSnapshot.getDownloadUrl();
+                    Picasso.with(CreateEventActivity.this).load(downloadUri).fit().centerCrop().into(eventImage);
+                    Toast.makeText(CreateEventActivity.this, "Upload Complete", Toast.LENGTH_LONG).show();
+                }
+            });
+        }
     }
 
 }

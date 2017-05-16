@@ -43,6 +43,7 @@ public class MyClubsFragment extends Fragment {
     public static final String clubID = "com.example.edmundconnor.clubemmobile.clubID";
     public static final String clubNAME = "com.example.edmundconnor.clubemmobile.clubNAME";
     public static final String clubDESC = "com.example.edmundconnor.clubemmobile.clubDESC";
+    private String id;
 
     public MyClubsFragment() {
         // Required empty public constructor
@@ -59,13 +60,18 @@ public class MyClubsFragment extends Fragment {
         clubNames[0] = "empty";
 
         Intent intent = getActivity().getIntent();
-        String id = intent.getStringExtra(LoginActivity.ID);
-        String getUrl = url + id + urlend;
+        id = intent.getStringExtra(LoginActivity.ID);
+
         //System.out.println(getUrl);
 
-        getMyClubs(getUrl);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        String getUrl = url + id + urlend;
+        getMyClubs(getUrl);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

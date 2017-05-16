@@ -32,7 +32,7 @@
         </activity>
         <activity android:name=".SignUpActivity" android:theme="@style/AppTheme.Dark" />
         <activity android:name=".CreateEventActivity" />
-        <activity android:name=".CreateClubActivity" />
+        <activity android:name=".CreateClubActivity" android:noHistory="true"/>
         <activity android:name=".ShowProfile" android:theme="@style/AppTheme.Dark"></activity>
         <activity android:name=".PrivateClubActivity" />
         <activity android:name=".PublicClubActivity" />

@@ -50,6 +50,7 @@ public class PrivateClubActivity extends AppCompatActivity {
     private static String club_name;
     private Button createEvent;
     private String cid;
+    private String uid;
     public static final String clubID = "com.example.edmundconnor.clubemmobile.clubID";
 
     @Override
@@ -58,7 +59,7 @@ public class PrivateClubActivity extends AppCompatActivity {
         setContentView(R.layout.activity_private_club);
         Intent intent = getIntent();
         cid = intent.getStringExtra(MyClubsFragment.clubID);
-        String uid = intent.getStringExtra(LoginActivity.ID);
+        uid = intent.getStringExtra(LoginActivity.ID);
         club_desc = intent.getStringExtra(MyClubsFragment.clubDESC);
         club_name = intent.getStringExtra(MyClubsFragment.clubNAME);
         System.out.print("Club ID: " + cid);
@@ -100,7 +101,13 @@ public class PrivateClubActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+    }
+
     public void getClubEvents() {
+
         JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url1, null,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -134,26 +141,27 @@ public class PrivateClubActivity extends AppCompatActivity {
                                 clubEventDescription[i] = description;
                                 clubEventDate[i] = startDate;
                                 clubEventId[i] = id;
+                                System.out.print("Event Name " + name + ", ");
 
                             }
                             lv = (ListView) findViewById(R.id.list_clubEvents);
-                            /*
+
                             ArrayAdapter<String> lvAdapter = new ArrayAdapter(
                                     PrivateClubActivity.this,
                                     android.R.layout.simple_list_item_1,
                                     clubEventName
                             );
-                            */
 
-                            esAdapter = new EventAdapter(getApplicationContext(), R.layout.event_row, eventItems);
-                            lv.setAdapter(esAdapter);
+
+                            //esAdapter = new EventAdapter(getApplicationContext(), R.layout.event_row, eventItems);
+                            lv.setAdapter(lvAdapter);
 
                             layoutinflater = getLayoutInflater();
                             TextView head = (TextView) View.inflate(PrivateClubActivity.this, R.layout.item_header, null);
                             head.setText("Upcoming Events");
                             lv.addHeaderView(head);
 
-                            lv.setAdapter(esAdapter);
+                            lv.setAdapter(lvAdapter);
 
                         } catch (JSONException e) {
                             e.printStackTrace();
