@@ -113,17 +113,6 @@
                 android:layout_alignStart="@+id/passwordEdit" />
             </android.support.design.widget.TextInputLayout>
 
-            <TextView android:text = "Passwords must match."
-                android:layout_width="wrap_content"
-                android:layout_height = "wrap_content"
-                android:id = "@+id/textview1"
-                android:ems="10"
-                android:textSize = "15dp"
-                android:visibility="invisible"
-                tools:gravity="center_vertical|center_horizontal"
-                android:gravity="center_vertical|center_horizontal"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="19dp" />
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -151,6 +140,18 @@
                 android:layout_margin="10dp"
                 android:text="Save Img"
                 android:visibility="invisible" />
+
+            <TextView android:text = "Passwords must match."
+                android:layout_width="wrap_content"
+                android:layout_height = "wrap_content"
+                android:id = "@+id/textview1"
+                android:ems="10"
+                android:textSize = "15dp"
+                android:visibility="invisible"
+                tools:gravity="center_vertical|center_horizontal"
+                android:gravity="center_vertical|center_horizontal"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="19dp" />
 
             <Button
                 android:text="Save new profile"

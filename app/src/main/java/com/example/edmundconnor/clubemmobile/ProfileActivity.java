@@ -95,6 +95,20 @@ public class ProfileActivity extends AppCompatActivity {
                     return;
                 }
 
+                if (gradYear.equals("")) {
+                    txt.setVisibility(View.VISIBLE);
+                    txt.setText("Enter valid year.");
+                    return;
+                }
+
+                if (Integer.parseInt(gradYear) < 1990 || Integer.parseInt(gradYear) > 2100) {
+                    txt.setVisibility(View.VISIBLE);
+                    txt.setText("Enter valid year.");
+                    return;
+                }
+
+
+
                 int y = Integer.parseInt(gradYear);
                 System.out.println(y);
                 if (gradYear == "") {
@@ -124,6 +138,7 @@ public class ProfileActivity extends AppCompatActivity {
                         new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
+                                txt.setVisibility(View.VISIBLE);
                                 txt.setText("Invalid Input.");
                                 Log.d("Error", "Error: " + error.getMessage());
                             }

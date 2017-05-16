@@ -42,8 +42,8 @@ public class NewsfeedFragment extends Fragment {
     String url = "https://clubs-jhu.herokuapp.com/clubs/api/";
     String url1 = "https://clubs-jhu.herokuapp.com/clubs/api/publicEvents";
     String url2 = "https://clubs-jhu.herokuapp.com/clubs/api/trendingEvents";
-    String url3;
-    String url4;
+    static String url3;
+    static String url4;
     String url5 = "https://clubs-jhu.herokuapp.com/clubs/api/trendingClubs";
     private String[] publicEventNames;
     private String[] publicEventDescriptions;
@@ -108,10 +108,12 @@ public class NewsfeedFragment extends Fragment {
                 Intent intent = new Intent(getActivity(), EventActivity.class);
                 position--;
                 Integer cid = publicEventIds[position];
+                System.out.println("**************** " + cid);
                 String event_id = Integer.toString(cid);
+                System.out.print("Event Id " + event_id);
                 intent.putExtra(eventID, event_id);
-                intent.putExtra(eventNAME, trendingClubNames[position]);
-                intent.putExtra(eventDESC, tredingClubDescriptions[position]);
+                intent.putExtra(eventNAME, publicEventNames[position]);
+                intent.putExtra(eventDESC, publicEventDescriptions[position]);
                 startActivity(intent);
             }
         });
@@ -194,6 +196,7 @@ public class NewsfeedFragment extends Fragment {
     }
 
     public void getUpcomingPublicEvents() {
+        System.out.println(url1);
         JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url1, null,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -215,6 +218,7 @@ public class NewsfeedFragment extends Fragment {
                                 String name = event.getString("name");
                                 String description = event.getString("description");
                                 //Integer id = event.getInt("eventId");
+                                String date = event.getString("startDate");
                                 //String date = event.getString("date");
                                 publicEventNames[i] = name;
                                 publicEventIds[i] = event.getInt("eventId");
@@ -314,11 +318,12 @@ public class NewsfeedFragment extends Fragment {
     }
 
     public void getSuggestedEvents() {
+        System.out.println("Suggested" + url3);
         JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url3, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        System.out.println(suggestedEventNames == null);
+                        System.out.println("Suggested" + suggestedEventNames == null);
                         try {
                             JSONArray events = response.getJSONArray("events");
                             suggestedEventNames = new String[events.length()];
@@ -350,8 +355,12 @@ public class NewsfeedFragment extends Fragment {
                             TextView head = (TextView) View.inflate(getActivity(), R.layout.item_header, null);
                             head.setText("Suggested Events");
                             lv.addHeaderView(head);
-
-                            lv.setAdapter(lvAdapter);
+                            System.out.println("events:" + events.length());
+                            if (events.length() == 0) {
+                                lv.setVisibility(View.GONE);
+                            } else {
+                                lv.setAdapter(lvAdapter);
+                            }
 
                         } catch (JSONException e) {
                             e.printStackTrace();
