@@ -33,7 +33,7 @@ public class SelectEventAdapter extends ArrayAdapter<Event> {
         final Event eventSelectedItem = getItem(position);
         //imgID = Integer.valueOf(eventSelectedItem.getImgId());
         event_name = eventSelectedItem.getName();
-        event_date_time = (eventSelectedItem.getDate());
+        event_date_time = (eventSelectedItem.getStartDate());
 
         if (convertView == null) {
             eventSelectListView = new LinearLayout(getContext());

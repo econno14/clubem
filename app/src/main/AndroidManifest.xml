@@ -31,6 +31,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".SignUpActivity" android:theme="@style/AppTheme.Dark" />
+        <activity android:name=".CreateEventActivity" />
+        <activity android:name=".CreateClubActivity" android:noHistory="true"/>
         <activity android:name=".CreateEventActivity" android:theme="@style/AppTheme.Dark" />
         <activity android:name=".CreateClubActivity" android:theme="@style/AppTheme.Dark"/>
         <activity android:name=".ShowProfile" android:theme="@style/AppTheme.Dark"></activity>

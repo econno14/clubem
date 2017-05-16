@@ -176,6 +176,7 @@ public class ProfileActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     Uri downloadUri = taskSnapshot.getDownloadUrl();
+
                     Picasso.with(ProfileActivity.this).load(downloadUri).fit().centerCrop().into(profileImg);
                 }
             });

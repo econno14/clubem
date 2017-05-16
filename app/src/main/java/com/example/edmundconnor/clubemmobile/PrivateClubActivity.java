@@ -23,6 +23,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.example.edmundconnor.clubemmobile.NewsfeedFragment.eventDESC;
 import static com.example.edmundconnor.clubemmobile.NewsfeedFragment.eventID;
 import static com.example.edmundconnor.clubemmobile.NewsfeedFragment.eventNAME;
@@ -30,6 +33,8 @@ import static com.example.edmundconnor.clubemmobile.NewsfeedFragment.eventNAME;
 public class PrivateClubActivity extends AppCompatActivity {
 
     private String url = "https://clubs-jhu.herokuapp.com/clubs/api/";
+    protected static List<Event> eventItems;
+    protected static EventAdapter esAdapter;
     private String url1, url2;
     private String[] clubEventName;
     private String[] clubEventLocation;
@@ -45,6 +50,7 @@ public class PrivateClubActivity extends AppCompatActivity {
     private static String club_name;
     private Button createEvent;
     private String cid;
+    private String uid;
     public static final String clubID = "com.example.edmundconnor.clubemmobile.clubID";
 
     @Override
@@ -53,7 +59,7 @@ public class PrivateClubActivity extends AppCompatActivity {
         setContentView(R.layout.activity_private_club);
         Intent intent = getIntent();
         cid = intent.getStringExtra(MyClubsFragment.clubID);
-        String uid = intent.getStringExtra(LoginActivity.ID);
+        uid = intent.getStringExtra(LoginActivity.ID);
         club_desc = intent.getStringExtra(MyClubsFragment.clubDESC);
         club_name = intent.getStringExtra(MyClubsFragment.clubNAME);
         System.out.print("Club ID: " + cid);
@@ -95,7 +101,13 @@ public class PrivateClubActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+    }
+
     public void getClubEvents() {
+
         JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url1, null,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -108,6 +120,7 @@ public class PrivateClubActivity extends AppCompatActivity {
                             clubEventDate = new String[events.length()];
                             clubEventId = new Integer[events.length()];
                             //jsonArray = new JSONObject[clubs.length()];
+                            List<Event> eventItems = new ArrayList<Event>();
                             for (int i = 0; i < events.length(); i++) {
                                 JSONObject event = events.getJSONObject(i);
                                 //jsonArray[i] = club;
@@ -117,20 +130,31 @@ public class PrivateClubActivity extends AppCompatActivity {
                                 String description = event.getString("description");
                                 String location = event.getString("location");
                                 String startDate = event.getString("startDate");
+                                String endDate = event.getString("endDate");
                                 Integer id = event.getInt("eventId");
+                                String sid = id.toString();
+                                List<String> eventTags = new ArrayList<String>();
+                                Event temp = new Event(sid, name, description, location, startDate, endDate, eventTags);
+                                eventItems.add(temp);
                                 clubEventName[i] = name;
                                 clubEventLocation[i] = location;
                                 clubEventDescription[i] = description;
                                 clubEventDate[i] = startDate;
                                 clubEventId[i] = id;
+                                System.out.print("Event Name " + name + ", ");
 
                             }
                             lv = (ListView) findViewById(R.id.list_clubEvents);
+
                             ArrayAdapter<String> lvAdapter = new ArrayAdapter(
                                     PrivateClubActivity.this,
                                     android.R.layout.simple_list_item_1,
                                     clubEventName
                             );
+
+
+                            //esAdapter = new EventAdapter(getApplicationContext(), R.layout.event_row, eventItems);
+                            lv.setAdapter(lvAdapter);
 
                             layoutinflater = getLayoutInflater();
                             TextView head = (TextView) View.inflate(PrivateClubActivity.this, R.layout.item_header, null);
