@@ -103,7 +103,7 @@
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@color/primary"
+                    android:background="@color/caldroid_gray"
                     android:id="@+id/event_add_image"
                     android:text="Add Image"
                     android:layout_marginRight="50dp"
@@ -112,7 +112,7 @@
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@color/primary"
+                    android:background="@color/caldroid_gray"
                     android:id="@+id/event_add_tags"
                     android:text="Add Tags" />
 
@@ -122,6 +122,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
                 android:id="@+id/event_img" />
+
+            <ListView
+                android:id="@+id/event_tag_list_view"
+                android:layout_height="fill_parent"
+                android:layout_width="match_parent"
+                android:layout_margin="15dp">
+            </ListView>
 
             <LinearLayout
                 android:layout_width="match_parent"

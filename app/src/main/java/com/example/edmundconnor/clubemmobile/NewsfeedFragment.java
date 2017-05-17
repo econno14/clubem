@@ -1,12 +1,8 @@
 package com.example.edmundconnor.clubemmobile;
 
-import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.IntegerRes;
 import android.support.v4.app.Fragment;
-import android.test.suitebuilder.TestMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,14 +11,12 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.edmundconnor.clubemmobile.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -208,7 +202,7 @@ public class NewsfeedFragment extends Fragment {
                             publicEventNames = new String[events.length()];
                             publicEventDescriptions = new String[events.length()];
                             publicEventIds = new Integer[events.length()];
-                            //List<Event> publicEvents = new ArrayList<Event>();
+                            List<Event> publicEvents = new ArrayList<Event>();
                             //jsonArray = new JSONObject[clubs.length()];
                             for (int i = 0; i < events.length(); i++) {
                                 JSONObject event = events.getJSONObject(i);
@@ -217,15 +211,18 @@ public class NewsfeedFragment extends Fragment {
                                 System.out.print("HERE i, ");
                                 String name = event.getString("name");
                                 String description = event.getString("description");
-                                //Integer id = event.getInt("eventId");
+                                Integer id = event.getInt("eventId");
                                 String date = event.getString("startDate");
-                                //String date = event.getString("date");
+                                String location = event.getString("location");
+                                String endDate = event.getString("endDate");
+                                JSONArray tags = (JSONArray) event.get("tags");
+
                                 publicEventNames[i] = name;
                                 publicEventIds[i] = event.getInt("eventId");
                                 //System.out.print("Event ID " + publicEventIds[i]);
                                 publicEventDescriptions[i] = description;
-                                //Event temp = new Event(id, name, description, date);
-                                //publicEvents.add(temp);
+                                Event temp = new Event(id.toString(), name, description, location, date, endDate, tags);
+                                publicEvents.add(temp);
 
                             }
                             System.out.print("HERE 2, ");
@@ -235,6 +232,9 @@ public class NewsfeedFragment extends Fragment {
                                     android.R.layout.simple_list_item_1,
                                     publicEventNames
                             );
+
+                            //EventAdapter eventAdapter = new EventAdapter(getActivity(), R.layout.event_row, publicEvents);
+                            //lv.setAdapter(eventAdapter);
 
                             layoutinflater = getActivity().getLayoutInflater();
                             TextView head = (TextView) View.inflate(getActivity(), R.layout.item_header, null);

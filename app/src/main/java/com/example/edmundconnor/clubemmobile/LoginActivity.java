@@ -1,32 +1,44 @@
 package com.example.edmundconnor.clubemmobile;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.ServerError;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 
 public class LoginActivity extends Activity  {
+
+    SharedPreferences myPrefs;
+    GoogleApiClient mGoogleApi;
+    private static final String TAG = "LoginActivity";
+    private static final int RC_SIGN_IN = 9001;
+
+    private FirebaseAuth mAuth;
     Button login,signUp;
     EditText editEmail,editPw;
     String url = "https://clubs-jhu.herokuapp.com/clubs/api/login";
@@ -38,7 +50,10 @@ public class LoginActivity extends Activity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        Context context = getApplicationContext();
+        myPrefs = PreferenceManager.getDefaultSharedPreferences(context);
 
+        mAuth = FirebaseAuth.getInstance();
 
         login = (Button)findViewById(R.id.login);
         editEmail = (EditText)findViewById(R.id.email);
@@ -79,6 +94,7 @@ public class LoginActivity extends Activity  {
                                     Integer userId = Integer.parseInt(id);
                                     System.out.println(userId);
                                     txt.setVisibility(View.INVISIBLE);
+                                    signInTapped();
                                     Intent intent = new Intent(getApplicationContext(), NavigationActivity.class);
                                     intent.putExtra(ID, id);
                                     startActivity(intent);
@@ -108,5 +124,70 @@ public class LoginActivity extends Activity  {
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+    }
+
+    public void signInTapped() {
+
+        if (!validateForm()) {
+            return;
+        }
+
+        mAuth.signInWithEmailAndPassword(editEmail.getText().toString(), editPw.getText().toString())
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "signInWithEmail:success");
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            SharedPreferences.Editor editor = myPrefs.edit();
+                            editor.putBoolean("logged_in", true);
+                            editor.apply();
+                            finish();
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w(TAG, "signInWithEmail:failure", task.getException());
+                            Toast.makeText(LoginActivity.this, "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+
+                        // [START_EXCLUDE]
+                        if (!task.isSuccessful()) {
+                            Toast.makeText(LoginActivity.this, "Task not successful",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                        // [END_EXCLUDE]
+                    }
+                });
+
+    }
+
+    private boolean validateForm() {
+        boolean valid = true;
+
+        String email = editEmail.getText().toString();
+        if (TextUtils.isEmpty(email)) {
+            editEmail.setError("Required.");
+            valid = false;
+        } else {
+            editEmail.setError(null);
+        }
+
+        String password = editPw.getText().toString();
+        if (TextUtils.isEmpty(password)) {
+            editPw.setError("Required.");
+            valid = false;
+        } else {
+            editPw.setError(null);
+        }
+
+        return valid;
     }
 }

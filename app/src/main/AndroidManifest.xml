@@ -31,21 +31,17 @@
             </intent-filter>
         </activity>
         <activity android:name=".SignUpActivity" android:theme="@style/AppTheme.Dark" />
-        <activity android:name=".CreateEventActivity" />
-        <activity android:name=".CreateClubActivity" android:noHistory="true"/>
+        <activity android:name=".CreateClubActivity" android:noHistory="true" android:theme="@style/AppTheme.Dark"/>
         <activity android:name=".CreateEventActivity" android:theme="@style/AppTheme.Dark" />
-        <activity android:name=".CreateClubActivity" android:theme="@style/AppTheme.Dark"/>
         <activity android:name=".ShowProfile" android:theme="@style/AppTheme.Dark"></activity>
         <activity android:name=".PrivateClubActivity" />
         <activity android:name=".PublicClubActivity" />
+        <activity android:name=".Event2Activity"></activity>
         <activity android:name=".EventActivity"></activity><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
      App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
-        <activity android:name=".PrivateClubActivity" android:theme="@style/AppTheme.Dark"/>
-        <activity android:name=".PublicClubActivity" android:theme="@style/AppTheme.Dark"/>
-        <activity android:name=".EventActivity" android:theme="@style/AppTheme.Dark"></activity>
     </application>
 
 </manifest>

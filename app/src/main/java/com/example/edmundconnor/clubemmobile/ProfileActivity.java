@@ -3,10 +3,12 @@ package com.example.edmundconnor.clubemmobile;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 
 import android.support.v7.app.AppCompatActivity;
@@ -24,6 +26,13 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.edmundconnor.clubemmobile.R;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -38,6 +47,13 @@ import org.json.JSONObject;
 
 
 public class ProfileActivity extends AppCompatActivity {
+
+    private FirebaseDatabase database;
+    private FirebaseAuth mAuth;
+    private FirebaseUser currentUser;
+    private DatabaseReference currentUserRef;
+    SharedPreferences myPrefs;
+    UserProfile userProfile;
     String id;
     EditText name_, email_, year_, pw_, pwRe_;
     Button edit;
@@ -78,7 +94,8 @@ public class ProfileActivity extends AppCompatActivity {
         // Retrieves Fire base Storage Reference
         StorageReference mStorage = FirebaseStorage.getInstance().getReference();
 
-
+        Context context = getApplicationContext();
+        myPrefs = PreferenceManager.getDefaultSharedPreferences(context);
 
         edit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,6 +106,7 @@ public class ProfileActivity extends AppCompatActivity {
                 final String passwordRe = pwRe_.getText().toString();
                 final String gradYear = year_.getText().toString();
                 Log.d("params", name + " " + email + " " + password + " " + passwordRe + " " + gradYear);
+
 
                 if (!password.equals(passwordRe)) {
                     txt.setVisibility(View.VISIBLE);
@@ -106,7 +124,6 @@ public class ProfileActivity extends AppCompatActivity {
                     txt.setText("Enter valid year.");
                     return;
                 }
-
 
 
                 int y = Integer.parseInt(gradYear);
@@ -165,18 +182,62 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+
+        database = FirebaseDatabase.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+        currentUser = mAuth.getCurrentUser();
+        currentUserRef = database.getReference().child("users").child(currentUser.getUid());
+
+        populateProfileData();
+    }
+
+    private void populateProfileData() {
+
+        ValueEventListener userListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                UserProfile user = dataSnapshot.getValue(UserProfile.class);
+                String name = "Name: " + user.getName();
+                String email = "Email: " + user.getEmail();
+                String zip = "Year: " + user.getGradyead();
+                name_.setText(name);
+                email_.setText(email);
+                year_.setText(zip);
+                if (user.getImagePath() != null && !user.getImagePath().equals("")) {
+                    FirebaseStorage storage = FirebaseStorage.getInstance();
+                    StorageReference sRef = storage.getReference();
+                    sRef.child(user.getImagePath()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            Picasso.with(ProfileActivity.this).load(uri).fit().centerCrop().into(profileImg);
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+        currentUserRef.addValueEventListener(userListener);
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
             Uri uri = data.getData();
-            StorageReference filepath = mStorage.child("EventPhotos").child(uri.getLastPathSegment());
+            final StorageReference filepath = mStorage.child("EventPhotos").child(uri.getLastPathSegment());
             imgRef = filepath.getPath();
             filepath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     Uri downloadUri = taskSnapshot.getDownloadUrl();
-
+                    currentUserRef.child("imagePath").setValue(filepath.getPath());
                     Picasso.with(ProfileActivity.this).load(downloadUri).fit().centerCrop().into(profileImg);
                 }
             });
@@ -196,3 +257,4 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 }
+

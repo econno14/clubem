@@ -64,12 +64,7 @@
         android:textSize="20dp"
         android:padding="10dp"/>
 
-    <Spinner
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/event_tags"
-        android:layout_below="@id/event_end_time"
-        android:padding="30dp">
 
-    </Spinner>
+
+
 </RelativeLayout>

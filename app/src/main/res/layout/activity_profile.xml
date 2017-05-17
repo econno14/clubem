@@ -119,18 +119,16 @@
                 android:layout_height="100dp"
                 android:src="@drawable/profile"
                 android:id="@+id/profile_image"
-                android:layout_marginTop="20dp"/>
+                android:layout_marginTop="20dp" />
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@color/colorPrimary"
                 android:id="@+id/add_img_button"
-                android:layout_toRightOf="@id/profile_image"
-                android:layout_alignBottom="@id/profile_image"
                 android:text="Add Img"/>
 
-            <Button
+            <!-- <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/save_image_button"
@@ -139,7 +137,7 @@
                 android:background="@color/colorAccent"
                 android:layout_margin="10dp"
                 android:text="Save Img"
-                android:visibility="invisible" />
+                android:visibility="invisible" /> -->
 
             <TextView android:text = "Passwords must match."
                 android:layout_width="wrap_content"

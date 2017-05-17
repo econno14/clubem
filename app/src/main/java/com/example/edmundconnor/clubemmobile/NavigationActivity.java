@@ -4,26 +4,21 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
-import android.view.View;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
+import android.view.View;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -31,8 +26,18 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -43,12 +48,16 @@ import java.util.Map;
 
 import static com.example.edmundconnor.clubemmobile.LoginActivity.ID;
 import static com.example.edmundconnor.clubemmobile.R.id.nav_feed;
-import static com.example.edmundconnor.clubemmobile.R.id.profile;
 
 public class NavigationActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     String id1;
-    //public static final String ID = "com.example.edmundconnor.clubemmobile.ID";
+    private FirebaseDatabase database;
+    private FirebaseAuth mAuth;
+    private FirebaseUser currentUser;
+    private DatabaseReference currentUserRef;
+    TextView navNameTextView;
+    ImageView navProfileImg;
 
 
     private String url = "https://clubs-jhu.herokuapp.com/clubs/api/user/";
@@ -66,19 +75,23 @@ public class NavigationActivity extends AppCompatActivity
         Intent intent = getIntent();
 
         id1 = intent.getStringExtra(LoginActivity.ID);
-        Integer userId = Integer.parseInt(id1);
+        //Integer userId = Integer.parseInt(id1);
 
-        SharedPreferences myPrefs = getSharedPreferences("myPrefs", getApplicationContext().MODE_PRIVATE);
+        SharedPreferences myPrefs = getSharedPreferences("myPrefs", MODE_PRIVATE);
         SharedPreferences.Editor editor = myPrefs.edit();
         editor.putString("ID", id1);
-        editor.commit();
+        editor.apply();
 
+        database = FirebaseDatabase.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+        currentUser = mAuth.getCurrentUser();
+        currentUserRef = database.getReference().child("users").child(currentUser.getUid());
 
-        System.out.println(userId);
+        System.out.println(id1);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        url = url + userId;
+        url = url + id1;
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -88,7 +101,44 @@ public class NavigationActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        final View headerView = navigationView.getHeaderView(0);
+        navNameTextView = (TextView) headerView.findViewById(R.id.nav_profile_name);
+
+        navigationView.setNavigationItemSelectedListener(this);
         displaySelectedScreen(R.id.nav_feed);
+
+        ValueEventListener userListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                UserProfile user = dataSnapshot.getValue(UserProfile.class);
+                navNameTextView.setText(user.getName());
+
+                try {
+                    String imgId = user.getImagePath();
+                    if (imgId != null) {
+                        final ImageView navHeader = (ImageView) headerView.findViewById(R.id.nav_header_image);
+                        FirebaseStorage storage = FirebaseStorage.getInstance();
+                        StorageReference sRef = storage.getReference();
+                        sRef.child(user.getImagePath()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                Picasso.with(NavigationActivity.this).load(uri).fit().centerCrop().into(navHeader);
+                            }
+                        });
+                    }
+                } catch (IllegalArgumentException ex) {
+                    System.out.println("Please select and Image in from a profile");
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+//        currentUserRef.addValueEventListener(userListener);
     }
 
     @Override
@@ -124,7 +174,7 @@ public class NavigationActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.settings) {
-            Intent intent = new Intent(NavigationActivity.this, LoginActivity .class);
+            Intent intent = new Intent(NavigationActivity.this, LoginActivity.class);
             startActivity(intent);
             return true;
         }

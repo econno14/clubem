@@ -3,14 +3,12 @@ package com.example.edmundconnor.clubemmobile;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -18,16 +16,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-
-import static com.example.edmundconnor.clubemmobile.LoginActivity.ID;
 
 public class CreateClubActivity extends AppCompatActivity {
 
@@ -37,23 +28,21 @@ public class CreateClubActivity extends AppCompatActivity {
     EditText clubDescription;
     private String url = "https://clubs-jhu.herokuapp.com/clubs/api/createClub";
     private String id;
-    private List<String> clubTags;
+    private JSONArray clubTags;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_club);
 
-        clubTags = new ArrayList<String>();
-        clubTags.add("Arts");
-        clubTags.add("Religious");
-        clubTags.add("Music");
-        clubTags.add("Cultural");
+        clubTags = new JSONArray();
+        clubTags.put("Religious");
+        clubTags.put("Cultural");
 
         Intent intent = getIntent();
         id = intent.getStringExtra(LoginActivity.ID);
 
-        createClub = (Button) findViewById(R.id.create_club_button);
+        createClub = (Button) findViewById(R.id.create_new_club);
         cancelClub = (Button) findViewById(R.id.cancel_new_club);
         clubName = (EditText) findViewById(R.id.new_club_name);
         clubDescription = (EditText) findViewById(R.id.new_club_description);
@@ -75,12 +64,12 @@ public class CreateClubActivity extends AppCompatActivity {
     }
 
     public void createClub() {
-
+        Integer uid = Integer.parseInt(id);
         JSONObject jsonBody = new JSONObject();
         try {
-            jsonBody.put("name", clubName.getText());
-            jsonBody.put("description", clubDescription.getText());
-            jsonBody.put("userID", id);
+            jsonBody.put("name", clubName.getText().toString());
+            jsonBody.put("description", clubDescription.getText().toString());
+            jsonBody.put("userID", uid);
             jsonBody.put("types", clubTags);
         } catch (JSONException e) {
             e.printStackTrace();

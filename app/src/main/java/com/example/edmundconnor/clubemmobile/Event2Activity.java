@@ -4,16 +4,10 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -25,13 +19,14 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.HashMap;
 import java.util.Map;
 
-public class EventActivity extends AppCompatActivity {
+/**
+ * Created by edmundConnor on 5/16/17.
+ */
+
+public class Event2Activity extends AppCompatActivity {
 
     TextView eventName;
     TextView eventDescription;
@@ -51,10 +46,14 @@ public class EventActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private ImageView imgView;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
+
+        database = FirebaseDatabase.getInstance();
+        myRef = database.getReference();
 
         Intent intent = getIntent();
         eventID = intent.getStringExtra(NewsfeedFragment.eventID);
@@ -67,8 +66,11 @@ public class EventActivity extends AppCompatActivity {
 
         imgView = (ImageView) findViewById(R.id.event_image);
 
-        getEventData();
+        setImage();
+        populateData();
+
     }
+
 
     public void setImage() {
 
@@ -95,42 +97,6 @@ public class EventActivity extends AppCompatActivity {
         };
     }
 
-
-    public void getEventData() {
-        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url2, null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        eventName = (TextView) findViewById(R.id.event_name);
-                        eventDescription = (TextView) findViewById(R.id.event_description);
-                        eventLocation = (TextView) findViewById(R.id.event_location);
-                        eventStartTime = (TextView) findViewById(R.id.event_start_time);
-                        eventEndTime = (TextView) findViewById(R.id.event_end_time);
-                        System.out.println(response);
-
-                        try {
-                            eventName.setText(response.getString("name"));
-                            eventDescription.setText(response.getString("description"));
-                            eventLocation.setText(response.getString("location"));
-                            eventStartTime.setText(response.getString("startDate"));
-                            eventEndTime.setText(response.getString("endDate"));
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-
-                        Log.d("Error", "Error");
-                    }
-                });
-        Volley.newRequestQueue(this).add(getRequest);
-    }
-
     private void populateData() {
         myRef.child("events").child(eventID).addValueEventListener(new ValueEventListener() {
             @Override
@@ -155,9 +121,5 @@ public class EventActivity extends AppCompatActivity {
             }
         });
     }
-
-
-
-
 
 }

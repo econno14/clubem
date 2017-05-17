@@ -4,10 +4,10 @@ package com.example.edmundconnor.clubemmobile;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -20,6 +20,12 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -30,12 +36,13 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
-public class SignUpActivity extends AppCompatActivity {
+public class SignUpActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
     EditText nameIn, emailIn, gradYearIn, pwIn, pwReIn;
     Button signUp;
     TextView txt;
+    private static final int RC_SIGN_IN = 9001;
+    private static final String TAG = "LoginActivity";
 
     SharedPreferences myPrefs;
 
@@ -43,6 +50,7 @@ public class SignUpActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseDatabase database;
     private DatabaseReference usersReference;
+    GoogleApiClient mGoogleApi;
 
     String url = "https://clubs-jhu.herokuapp.com/clubs/api/signup";
 
@@ -59,13 +67,29 @@ public class SignUpActivity extends AppCompatActivity {
         txt = (TextView) findViewById(R.id.textview1);
 
         signUp = (Button)findViewById(R.id.buttonSignUp);
+        Button cancel = (Button) findViewById(R.id.buttonCancel);
 
-        mAuth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
         usersReference = database.getReference().child("users");
 
         Context context = getApplicationContext();
         myPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+        mGoogleApi = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(intent);
+            }
+        });
 
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,6 +128,8 @@ public class SignUpActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
+                signUp(email, password);
+
                 JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, url, jsonBody,
                         new Response.Listener<JSONObject>() {
                             @Override
@@ -125,6 +151,8 @@ public class SignUpActivity extends AppCompatActivity {
                 Volley.newRequestQueue(getApplicationContext()).add(postRequest);
             }
         });
+
+        mAuth = FirebaseAuth.getInstance();
     }
 
     private void signUp(String email, String password) {
@@ -136,13 +164,14 @@ public class SignUpActivity extends AppCompatActivity {
                             Log.d("RegistrationActivity", "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
 
-                            String name = nameIn.getText().toString();
+                            final String name = nameIn.getText().toString();
                             final String email = emailIn.getText().toString();
                             final String password = pwIn.getText().toString();
-                            final String passwordRe = pwReIn.getText().toString();
                             final String gradYear = gradYearIn.getText().toString();
 
                             createUser(user.getUid(), name, email, gradYear, password);
+                            user = mAuth.getCurrentUser();
+
                         } else {
                             Log.w("RegistrationActivity", "createUserWithEmail:failure", task.getException());
                             Toast.makeText(getApplicationContext(), "Signup failed.",
@@ -153,7 +182,7 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void createUser(String uid, String name, String email, String year, String password) {
-        UserProfile user = new UserProfile(uid, year, email, password);
+        UserProfile user = new UserProfile(uid, year, email, year);
 
         usersReference.child(uid).setValue(user.toMap());
         signIn(email, password);
@@ -183,4 +212,40 @@ public class SignUpActivity extends AppCompatActivity {
                 });
     }
 
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == RC_SIGN_IN) {
+            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            handleSignInResult(result);
+        }
+    }
+
+    private void handleSignInResult(GoogleSignInResult result) {
+        Log.d(TAG, "handleSignInResult:" + result.isSuccess());
+        if (result.isSuccess()) {
+            GoogleSignInAccount acct = result.getSignInAccount();
+
+            //statusTextView.setText("Hello, " + acct.getDisplayName());
+
+            SharedPreferences.Editor editor = myPrefs.edit();
+            editor.putBoolean("logged_in", true);
+            editor.apply();
+
+            Intent intent = new Intent(this, NavigationActivity.class);
+            startActivity(intent);
+            finish();
+
+        } else if (result.getStatus().isInterrupted()) {
+            // DO NOTHING!
+        } else {
+            Toast.makeText(getApplicationContext(), "Account not registered.", Toast.LENGTH_SHORT).show();
+        }
+    }
 }

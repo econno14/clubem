@@ -129,5 +129,19 @@
             android:id="@+id/buttonSignUp"/>
         </android.support.design.widget.TextInputLayout>
 
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp">
+            <Button
+                android:text="Cancel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/buttonCancel"
+                android:background="@color/caldroid_gray"
+                android:textColor="@color/primary_dark"/>
+        </android.support.design.widget.TextInputLayout>
+
     </LinearLayout>
 </ScrollView>

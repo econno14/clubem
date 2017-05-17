@@ -1,10 +1,12 @@
 package com.example.edmundconnor.clubemmobile;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.annotation.IntegerRes;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,6 +25,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.appindexing.Thing;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -36,6 +41,12 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
@@ -52,11 +63,13 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.jar.JarException;
 
+import static android.provider.Telephony.MmsSms.PendingMessages.ERROR_TYPE;
 import static com.example.edmundconnor.clubemmobile.LoginActivity.ID;
 
 public class CreateEventActivity extends AppCompatActivity {
 
-
+    protected FirebaseDatabase database;
+    protected DatabaseReference myRef;
 
     Button saveEvent;
     Button cancelEvent;
@@ -70,12 +83,17 @@ public class CreateEventActivity extends AppCompatActivity {
     private TimePicker startTime;
     private TimePicker endTime;
     private ListView eventTags;
+    protected static ArrayList<String> attributeItems = new ArrayList<>();
     protected int PICK_IMAGE_REQUEST = 1;
     ImageView eventImage;
+    private String userID;
+    private Integer clubID;
 
+    protected UserProfile user;
     public StorageReference mStorage;
     public Uri uri;
     protected String imgReference;
+    protected static ListAttributeAdapter laAdapter;
 
     private GoogleApiClient client;
 
@@ -84,7 +102,16 @@ public class CreateEventActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_event);
 
+        Intent intent = getIntent();
+
+        // Retrieves Fire base Storage Reference
+        mStorage = FirebaseStorage.getInstance().getReference();
+        database = FirebaseDatabase.getInstance();
+        user = new UserProfile();
+        initializeUser();
+
         String cid = getIntent().getStringExtra(MyClubsFragment.clubID);
+        clubID = Integer.parseInt(cid);
         putUrl = url + cid + "/createEvent";
         System.out.print("***********");
         System.out.println(putUrl);
@@ -116,16 +143,15 @@ public class CreateEventActivity extends AppCompatActivity {
         saveEvent = (Button) findViewById(R.id.event_save);
         saveEvent.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                try {
-                    createEvent();
-                    Intent intent = new Intent(CreateEventActivity.this, NavigationActivity.class);
-                    SharedPreferences myPrefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
-                    String uID = myPrefs.getString("ID", "1");
-                    intent.putExtra(ID, uID);
-                    //startActivity(intent);
-                } catch (JSONException e) {
-                    System.out.println(e.getMessage());
-                }
+
+                //createEvent();
+                writeToDB();
+                Intent intent = new Intent(CreateEventActivity.this, NavigationActivity.class);
+                SharedPreferences myPrefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
+                String uID = myPrefs.getString("ID", "1");
+                intent.putExtra(ID, uID);
+                startActivity(intent);
+
 
             }
         });
@@ -140,10 +166,83 @@ public class CreateEventActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
+
+        eventTags = (ListView) findViewById(R.id.event_tag_list_view);
+        laAdapter = new ListAttributeAdapter(this, R.layout.check_list_item, attributeItems);
+        eventTags.setAdapter(laAdapter); // Layout File
+
+        // setup the alert builder
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Select Event Attributes");
+        // Add a Checkbox List
+        final String[] event_attributes = getResources().getStringArray(R.array.tags);
+        final boolean[] checkedItems = new boolean[event_attributes.length];
+        builder.setMultiChoiceItems(event_attributes, checkedItems, new DialogInterface.OnMultiChoiceClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                if (isChecked) {
+                    // Add Attribute Item!
+                    attributeItems.add(event_attributes[which]);
+                } else {
+                    // Remove Attribute Item!
+                    attributeItems.remove(event_attributes[which]);
+                }
+            }
+        });
+
+        // Add OK and Cancel buttons
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // user clicked OK
+            }
+        });
+        builder.setNegativeButton("Cancel", null);
+
+
+        addTags.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+        });
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+
     }
 
+    private void writeToDB() {
+        myRef = database.getReference().child("events").push();
+        String myKey = myRef.getKey();
+
+        String imgId = imgReference;
+
+        // Setting the date and start/end times
+        final Calendar c = Calendar.getInstance();
+        c.set(eventDate.getYear(), eventDate.getMonth(), eventDate.getDayOfMonth(), startTime.getCurrentHour(), startTime.getCurrentMinute());
+        long start_time = c.getTimeInMillis();
+        c.set(eventDate.getYear(), eventDate.getMonth(), eventDate.getDayOfMonth(), endTime.getCurrentHour(), endTime.getCurrentMinute());
+        long end_time = c.getTimeInMillis();
+
+        HashMap<String, String> tags = new HashMap<>();
+        Event e = new Event(myKey, eventName.getText().toString(), eventDesc.getText().toString(), eventLoc.getText().toString(), start_time, end_time, imgId, clubID, tags);
+        // Write a message to the database
+        myRef.setValue(e);
+        populateAttributeList(myKey);
+    }
+
+    public void populateAttributeList(String key) {
+
+        final DatabaseReference myAtrRef = database.getReference().child("events").child(key).child("tags");
+
+        final ArrayList<String> eAttributes = attributeItems;
+
+        for(String tags: eAttributes) {
+            myAtrRef.push().setValue(tags);
+            System.out.println("Tags: " + tags);
+        }
+
+    }
 
     public void createEvent() throws JSONException {
         JSONArray tags = new JSONArray();
@@ -219,6 +318,66 @@ public class CreateEventActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    private void initializeUser() {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        DatabaseReference currentUserRef = database.getReference().child("users").child(currentUser.getUid());
+        ValueEventListener userListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                user = dataSnapshot.getValue(UserProfile.class);
+                userID = user.getUid();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+        currentUserRef.addValueEventListener(userListener);
+    }
+
+    public class ListAttributeAdapter extends ArrayAdapter<String> {
+        int res;
+
+        public ListAttributeAdapter(Context ctx, int res, List<String> attributes) {
+            super(ctx, res, attributes);
+            this.res = res;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            LinearLayout attributeView;
+            String attribute = getItem(position);
+
+            if (convertView == null) {
+                attributeView = new LinearLayout(getContext());
+                String inflater = Context.LAYOUT_INFLATER_SERVICE;
+                LayoutInflater vi = (LayoutInflater) getContext().getSystemService(inflater);
+                vi.inflate(res, attributeView, true);
+            } else {
+                attributeView = (LinearLayout) convertView;
+            }
+
+            TextView attribute_name = (TextView) attributeView.findViewById(R.id.event_attribute);
+
+            attribute_name.setText(attribute);
+
+            return attributeView;
+        }
+    }
+
+    public Action getIndexApiAction() {
+        Thing object = new Thing.Builder()
+                .setName("CreateEvent Page") // TODO: Define a title for the content shown.
+                // TODO: Make sure this auto-generated URL is correct.
+                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
+                .build();
+        return new Action.Builder(Action.TYPE_VIEW)
+                .setObject(object)
+                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
+                .build();
     }
 
 }

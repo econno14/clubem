@@ -34,6 +34,7 @@ public class UserProfile {
     public String getEmail() { return email; }
     public String getImagePath() { return imagePath; }
     public String getGradyead() {return gradyear; }
+    public void setImagePath(String x) {imagePath = x;}
 
 
     public Map<String, Object> toMap() {
