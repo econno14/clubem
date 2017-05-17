@@ -225,6 +225,7 @@ public class CreateEventActivity extends AppCompatActivity {
         long end_time = c.getTimeInMillis();
 
         HashMap<String, String> tags = new HashMap<>();
+        System.out.println("********************* " + imgReference);
         Event e = new Event(myKey, eventName.getText().toString(), eventDesc.getText().toString(), eventLoc.getText().toString(), start_time, end_time, imgId, clubID, tags);
         // Write a message to the database
         myRef.setValue(e);
@@ -308,8 +309,6 @@ public class CreateEventActivity extends AppCompatActivity {
             // Stores image in firebase.
             StorageReference filepath = mStorage.child("EventPhotos").child(uri.getLastPathSegment());
             imgReference = filepath.getPath();
-
-
 
             filepath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
