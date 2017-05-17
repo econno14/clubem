@@ -2,32 +2,38 @@ package com.example.edmundconnor.clubemmobile;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Settings;
+import android.preference.PreferenceManager;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.edmundconnor.clubemmobile.R;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+import static android.app.Activity.RESULT_OK;
+import static com.example.edmundconnor.clubemmobile.LoginActivity.ID;
 
 
 public class MyClubsFragment extends Fragment {
@@ -38,12 +44,14 @@ public class MyClubsFragment extends Fragment {
     private String[] clubDescriptions;
     private Integer[] clubId;
     private JSONObject[] jsonArray;
+    ImageView profileImg;
     private ListView lv;
     private LayoutInflater layoutinflater;
     public static final String clubID = "com.example.edmundconnor.clubemmobile.clubID";
     public static final String clubNAME = "com.example.edmundconnor.clubemmobile.clubNAME";
     public static final String clubDESC = "com.example.edmundconnor.clubemmobile.clubDESC";
     private String id;
+    private int PICK_IMAGE_REQUEST = 1;
 
     public MyClubsFragment() {
         // Required empty public constructor
@@ -59,18 +67,55 @@ public class MyClubsFragment extends Fragment {
         clubNames = new String[1];
         clubNames[0] = "empty";
 
+        profileImg = (ImageView) getActivity().findViewById(R.id.club_pic);
+
         Intent intent = getActivity().getIntent();
-        id = intent.getStringExtra(LoginActivity.ID);
+        Context context = getActivity().getApplicationContext();
+        SharedPreferences myPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+        id = myPrefs.getString(ID, "6");
 
-        //System.out.println(getUrl);
+        //id = intent.getStringExtra(ID);
 
+        String getUrl = url + id + urlend;
+        System.out.println(getUrl);
+        getMyClubs(getUrl);
+
+
+    }
+
+    public boolean saveImageToInternalStorage(Bitmap image) {
+
+        try {
+            FileOutputStream fos = getActivity().getBaseContext().openFileOutput("clublogo.png", Context.MODE_PRIVATE);
+            image.compress(Bitmap.CompressFormat.PNG, 100, fos);
+            fos.close();
+            return true;
+        } catch (Exception e) {
+            Log.e("saveToInternalStorage()", e.getMessage());
+            return false;
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            Uri uri = data.getData();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
+                saveImageToInternalStorage(bitmap);
+                Picasso.with(getActivity()).load(uri).fit().centerCrop().into(profileImg);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        String getUrl = url + id + urlend;
-        getMyClubs(getUrl);
+
     }
 
     @Override

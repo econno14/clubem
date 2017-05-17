@@ -4,10 +4,10 @@ import android.Manifest;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.CalendarContract;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -22,7 +22,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.edmundconnor.clubemmobile.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,12 +29,10 @@ import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
-import static com.example.edmundconnor.clubemmobile.R.styleable.View;
+import static com.example.edmundconnor.clubemmobile.LoginActivity.ID;
 
 
 public class CalendarFragment extends Fragment {
@@ -57,7 +54,11 @@ public class CalendarFragment extends Fragment {
         super.onCreate(savedInstanceState);
         getActivity().setTitle("CalendarFragment");
 
-        //getEvents();
+        calendar = (CalendarView) getActivity().findViewById(R.id.simpleCalendarView);
+        Context context = getActivity().getApplicationContext();
+        SharedPreferences myPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+        int x = myPrefs.getInt(ID, 6);
+        getEvents(x);
 
     }
 
@@ -120,8 +121,8 @@ public class CalendarFragment extends Fragment {
                                     // for ActivityCompat#requestPermissions for more details.
                                     return;
                                 }
-                                Uri uri = cr.insert(CalendarContract.Events.CONTENT_URI, values);
-
+                                //Uri uri = cr.insert(CalendarContract.Events.CONTENT_URI, values);
+                                calendar.setDate(event.getLong("startTime"));
                             }
 
                         } catch (JSONException e) {

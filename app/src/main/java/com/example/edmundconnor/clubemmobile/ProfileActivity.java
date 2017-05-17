@@ -61,7 +61,7 @@ public class ProfileActivity extends AppCompatActivity {
     ImageView profileImg;
     public static final String ID = "com.example.edmundconnor.clubemmobile.ID";
     private StorageReference mStorage;
-    private String imgRef;
+    private String imgRef = "";
 
     String url = "https://clubs-jhu.herokuapp.com/clubs/api/";
 
@@ -90,6 +90,7 @@ public class ProfileActivity extends AppCompatActivity {
         Integer userId = Integer.parseInt(id);
         final String urlEnd = url + id + "/editUser";
         System.out.println(urlEnd);
+
 
         // Retrieves Fire base Storage Reference
         StorageReference mStorage = FirebaseStorage.getInstance().getReference();

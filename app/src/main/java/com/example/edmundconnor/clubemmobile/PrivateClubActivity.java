@@ -2,7 +2,10 @@ package com.example.edmundconnor.clubemmobile;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,6 +13,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -18,16 +22,24 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,11 +64,19 @@ public class PrivateClubActivity extends AppCompatActivity {
     private String cid;
     private String uid;
     public static final String clubID = "com.example.edmundconnor.clubemmobile.clubID";
+    private FirebaseAuth mAuth;
+    private FirebaseUser currentUser;
+    private DatabaseReference currentUserRef;
+    private StorageReference mStorage;
+    private ImageView imageView;
+
 
     private FirebaseDatabase database;
     private DatabaseReference myRef;
     private ArrayList<String> keys = new ArrayList<String>();
     private ListView clubEvents;
+    private int PICK_IMAGE_REQUEST = 1;
+    private String imgRef = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,11 +88,15 @@ public class PrivateClubActivity extends AppCompatActivity {
         club_desc = intent.getStringExtra(MyClubsFragment.clubDESC);
         club_name = intent.getStringExtra(MyClubsFragment.clubNAME);
         System.out.print("Club ID: " + cid);
+        imageView = (ImageView) findViewById(R.id.club_pic);
 
         clubEventName = new ArrayList<String>();
 
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference();
+
+        mStorage = FirebaseStorage.getInstance().getReference();
+
 
         setTitle(club_name);
         TextView description = (TextView) findViewById(R.id.club_description);
@@ -82,6 +106,16 @@ public class PrivateClubActivity extends AppCompatActivity {
         url2 = url + cid + "/members";
         //getClubEvents();
         getClubMembers();
+
+        if (!imgRef.equals("")) {
+            System.out.println("Attaching Image");
+            mStorage.child(imgRef).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    Picasso.with(getApplicationContext()).load(uri).fit().centerCrop().into(imageView);
+                }
+            });
+        }
 
         createEvent = (Button) findViewById(R.id.create_event_button);
         createEvent.setOnClickListener(new View.OnClickListener() {
@@ -95,6 +129,7 @@ public class PrivateClubActivity extends AppCompatActivity {
         clubEvents = (ListView) findViewById(R.id.list_clubEvents);
 
         populateList();
+        setImage();
 
         clubEvents.setOnItemClickListener(new AdapterView.OnItemClickListener()
         {
@@ -107,6 +142,19 @@ public class PrivateClubActivity extends AppCompatActivity {
                 System.out.print("Event ID " + cid);
                 intent.putExtra(eventID, cid);
                 startActivity(intent);
+            }
+        });
+
+        Button addImgButton = (Button) findViewById(R.id.add_club_img);
+        addImgButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Button saveImage = (Button) findViewById(R.id.save_image_button);
+                //saveImage.setVisibility(View.VISIBLE);
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
             }
         });
     }
@@ -155,6 +203,65 @@ public class PrivateClubActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            Uri uri = data.getData();
+            StorageReference mStorage = FirebaseStorage.getInstance().getReference();
+            final StorageReference filepath = mStorage.child("EventPhotos").child(uri.getLastPathSegment());
+            imgRef = filepath.getPath();
+
+            try {
+                final Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
+                saveImageToInternalStorage(bitmap);
+                Picasso.with(PrivateClubActivity.this).load(uri).fit().centerCrop().into(imageView);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+    public void setImage() {
+
+        ValueEventListener valueEventListener = new ValueEventListener() {
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Event event = dataSnapshot.getValue(Event.class);
+                // Reference to an image file in Firebase Storage
+                if (event.getImgId() != null && !event.getImgId().equals("")) {
+                    System.out.println("Attaching Image");
+                    mStorage.child(event.getId()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            Picasso.with(getApplicationContext()).load(uri).fit().centerCrop().into(imageView);
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        };
+    }
+
+
+    public boolean saveImageToInternalStorage(Bitmap image) {
+
+        try {
+            FileOutputStream fos = getBaseContext().openFileOutput("profileImage.png", Context.MODE_PRIVATE);
+            image.compress(Bitmap.CompressFormat.PNG, 100, fos);
+            fos.close();
+            return true;
+        } catch (Exception e) {
+            Log.e("saveToInternalStorage()", e.getMessage());
+            return false;
+        }
     }
 
     /*
@@ -275,4 +382,6 @@ public class PrivateClubActivity extends AppCompatActivity {
         Volley.newRequestQueue(this).add(getRequest);
         //Log.i("Club Name here", jsonArray[0].toString());
     }
+
+
 }

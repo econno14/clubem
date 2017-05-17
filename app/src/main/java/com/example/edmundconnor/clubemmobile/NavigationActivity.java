@@ -123,7 +123,7 @@ public class NavigationActivity extends AppCompatActivity
                         sRef.child(user.getImagePath()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
                             public void onSuccess(Uri uri) {
-                                Picasso.with(NavigationActivity.this).load(uri).fit().centerCrop().into(navHeader);
+                                Picasso.with(NavigationActivity.this).load(uri).fit().centerCrop().rotate(-90).into(navHeader);
                             }
                         });
                     }
@@ -138,7 +138,7 @@ public class NavigationActivity extends AppCompatActivity
 
             }
         };
-//        currentUserRef.addValueEventListener(userListener);
+        currentUserRef.addValueEventListener(userListener);
     }
 
     @Override

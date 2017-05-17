@@ -82,10 +82,10 @@ public class Event2Activity extends AppCompatActivity {
                 // Reference to an image file in Firebase Storage
                 if (event.getImgId() != null && !event.getImgId().equals("")) {
                     System.out.println("Attaching Image");
-                    storageRef.child(eventID).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    storageRef.child(event.getId()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
                         public void onSuccess(Uri uri) {
-                            Picasso.with(getApplicationContext()).load(uri).fit().centerCrop().into(imgView);
+                            Picasso.with(getApplicationContext()).load(uri).fit().centerCrop().rotate(-90).into(imgView);
                         }
                     });
                 }
